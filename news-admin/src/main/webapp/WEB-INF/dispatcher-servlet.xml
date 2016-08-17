@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+    <bean id="localeResolver"
+          class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="cookieName" value="lang"/>
+        <property name="defaultLocale" value="en"/>
+    </bean>
+
+    <context:component-scan base-package="com.epam.hubarevichadmin"/>
+    <mvc:annotation-driven/>
+    <import resource="spring-security.xml"/>
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="WEB-INF/resource/message"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean id="localeChangeInterceptor"
+                  class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+                <property name="paramName" value="lang"/>
+            </bean>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.epam.hubarevichadmin.util.ViewNameInModelInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <import resource="classpath*:beans.xml"/>
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"/>
+
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/tiles.xml</value>
+            </list>
+        </property>
+    </bean>
+    <mvc:annotation-driven conversion-service="conversionService"/>
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.epam.hubarevichadmin.util.StringToTagConverter"/>
+                <bean class="com.epam.hubarevichadmin.util.DateConverter"/>
+            </set>
+        </property>
+    </bean>
+
+
+</beans>

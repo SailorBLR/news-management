@@ -1,0 +1,247 @@
+html, body {
+    height: 100%;
+    background-color: #dddddd;
+}
+
+#container {
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+header {
+   /* width: 94%;
+    padding: 3%;*/
+    background-color: #333333;
+}
+
+header #title {
+    font-size: 50px;
+    color: #fff;
+}
+
+nav {
+    width: 97%;
+    background-color: #E64A19;
+    padding: 0 1.5% 0 1.5%;
+}
+
+nav ul li {
+    display: inline-block;
+    padding: 15px 1.5% 15px 1.5%;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1.2em;
+}
+
+nav ul li a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+
+#content {
+    float: left;
+    padding: 3%;
+    width: 64%;
+}
+
+aside {
+    float: right;
+    padding: 3%;
+    width: 24%;
+    background-color: #eee;
+}
+
+* {
+    margin: 0;
+}
+
+.page-wrap {
+    min-height: 100%;
+    /* equal to footer height */
+    margin-bottom: -142px;
+}
+
+.page-wrap:after {
+    content: "";
+    display: block;
+}
+
+.site-footer, .page-wrap:after {
+    height: 20px;
+}
+
+.site-footer {
+    background-color: #333333;
+    margin-top: 150px;
+    text-align: -webkit-center;
+    color: white;
+}
+
+.search-container {
+    display: block;
+    min-height: 20px;
+    background-color: #eeeeee;
+    padding: 10px;
+}
+
+.news-container {
+    display: block;
+    min-height: 50px;
+    background-color: white;
+    padding: 10px;
+}
+
+.news-header {
+    display: block;
+    min-height: 20px;
+    background-color: #aeaeae;
+    padding: 3px;
+}
+
+.news-short {
+    display: block;
+    min-height: 10px;
+    background-color: rgba(125, 255, 0, 0.16);
+    padding: 3px;
+}
+
+.news-info {
+    display: block;
+    width: inherit;
+    min-height: 10px;
+    background-color: #aeaeae;
+    padding: 3px;
+    overflow: hidden;
+}
+
+.search-els {
+    cursor: pointer;
+    line-height: 1;
+    width: 200px;
+}
+
+.author {
+    width: 45%;
+    display: inline-block;
+    float: left;
+}
+
+.tagses {
+    width: 45%;
+    float: right;
+
+}
+
+.news-ref {
+    float: left;
+    width: 70%;
+}
+.news-date {
+    width: 20%;
+    float: right;
+    text-align: right;
+}
+.pagination {
+    display: block;
+    min-height: 20px;
+    background-color: #eeeeee;
+    padding: 10px;
+}
+
+.full-news-container {
+    display: block;
+    min-height: 50px;
+    background-color: white;
+    padding: 10px;
+}
+
+.date-cell {
+    position: relative;
+    width: 94%;
+    padding-left: 3%;
+    padding-right: 3%;
+    min-height: 15px;
+    background-color: #aeaeae;
+}
+
+.view-title {
+    text-align: left;
+    position: relative;
+    width: 94%;
+    padding-left: 3%;
+    padding-right: 3%;
+    min-height: 15px;
+    background-color: #dddddd;
+}
+
+.view-full {
+    position: relative;
+    width: 94%;
+    padding-left: 3%;
+    padding-right: 3%;
+    background-color: white;
+    text-align: justify;
+    overflow: hidden;
+}
+
+.tags {
+    position: relative;
+    width: 94%;
+    padding-left: 3%;
+    padding-right: 3%;
+    min-height: 15px;
+    background-color: #dddddd;
+}
+
+.comments-container {
+    display: block;
+    min-height: 50px;
+    background-color: white;
+    padding: 10px;
+}
+.comment {
+    display: block;
+    background-color: #eeeeee;
+    overflow: hidden;
+}
+.pages {
+    display: inline;
+    float: left;
+    width: 80%;
+}
+.most-commented-button {
+    display: inline;
+    float: right;
+    width: 20%;
+}
+.next-prev-container {
+    display: block;
+    min-height: 20px;
+    background-color: white;
+}
+.next {
+    padding-left: 10px;
+    display: inline;
+    float: left;
+    width: 45%;
+}
+.prev {
+    padding-right: 10px;
+    display: inline;
+    float: right;
+    width: 45%;
+    text-align: right;
+}
+.portal-name {
+    float: left;
+    width:40%;
+}
+.header {
+    height: 50px;
+    width: 94%;
+    padding: 3%;
+    background-color: #333333;
+}

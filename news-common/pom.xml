@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>news-management</artifactId>
+        <groupId>NewsManagement</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>news-common</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+                <version>3.5.1</version>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>4.2.5.RELEASE</spring.version>
+        <junit.version>4.12</junit.version>
+        <dbcp.version>1.2.2</dbcp.version>
+        <mockito.version>1.10.19</mockito.version>
+        <dbunit.version>2.5.0</dbunit.version>
+        <ojdbc.version>12.1.0.1</ojdbc.version>
+        <springtestdbunit.version>1.2.0</springtestdbunit.version>
+    </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <version>12.1.0.1</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>codelds</id>
+            <url>https://code.lds.org/nexus/content/groups/main-repo</url>
+        </repository>
+    </repositories>
+
+</project>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+    <definition name="layout-error" template="/WEB-INF/template/layout-error.jsp">
+        <put-attribute name="error" value=""/>
+    </definition>
+
+    <definition name="admin-temp" template="/WEB-INF/template/layout-admin.jsp">
+        <put-attribute name="header" value="/WEB-INF/template/header.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/template/menu.jsp"/>
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/template/footer.jsp" />
+    </definition>
+
+    <definition name="default" template="/WEB-INF/template/layout-default.jsp">
+        <put-attribute name="header" value="/WEB-INF/template/header.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/template/footer.jsp" />
+    </definition>
+
+    <definition name="newsMessage" extends="admin-temp">
+        <put-attribute name="title" value="News message details" />
+        <put-attribute name="body" value="/WEB-INF/jsp/newsView.jsp" />
+    </definition>
+
+    <definition name="all" extends="admin-temp">
+        <put-attribute name="title" value="All news"/>
+        <put-attribute name="body" value="/WEB-INF/jsp/allNews.jsp"/>
+    </definition>
+
+    <definition name="login" extends="default">
+        <put-attribute name="login.key" value="label.login" />
+        <put-attribute name="title" value="Login Page"/>
+        <put-attribute name="body" value="/WEB-INF/jsp/login.jsp"/>
+    </definition>
+
+    <definition name="allAuthors" extends="admin-temp">
+        <put-attribute name="title" value="Admin page"/>
+        <put-attribute name="body" value="/WEB-INF/jsp/authorsPage.jsp"/>
+    </definition>
+
+    <definition name="allTags" extends="admin-temp">
+        <put-attribute name="title" value="Tags page"/>
+        <put-attribute name="body" value="/WEB-INF/jsp/tagsPage.jsp"/>
+    </definition>
+
+    <definition name="addNews" extends="admin-temp">
+        <put-attribute name="title" value="Create/edit news"/>
+        <put-attribute name="body" value="/WEB-INF/jsp/editNews.jsp"/>
+    </definition>
+
+    <definition name="403" extends="layout-error">
+        <put-attribute name="error" value="403"/>
+    </definition>
+
+    <definition name="500" extends="layout-error">
+        <put-attribute name="error" value="500"/>
+    </definition>
+
+
+
+</tiles-definitions>

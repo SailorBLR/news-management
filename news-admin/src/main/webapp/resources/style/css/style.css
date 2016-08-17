@@ -1,0 +1,411 @@
+html, body {
+    height: 100%;
+    background-color: #dddddd;
+}
+
+#container {
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+header {
+   /* width: 94%;
+    padding: 3%;*/
+    background-color: #333333;
+}
+
+header #title {
+    font-size: 30px;
+    color: #fff;
+}
+
+nav {
+    width: 97%;
+    background-color: #E64A19;
+    padding: 0 1.5% 0 1.5%;
+}
+
+nav ul li {
+    display: inline-block;
+    padding: 15px 1.5% 15px 1.5%;
+}
+
+nav ul li a {
+    position: relative;
+    width:100%;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1.2em;
+}
+
+nav ul li a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+
+#content {
+    float: left;
+    padding: 3%;
+    width: 64%;
+}
+
+aside {
+    float: right;
+    padding: 3%;
+    width: 24%;
+    background-color: #eee;
+}
+
+* {
+    margin: 0;
+}
+
+.page-wrap {
+    min-height: 100%;
+    /* equal to footer height */
+    margin-bottom: -142px;
+}
+
+.page-wrap:after {
+    content: "";
+    display: block;
+}
+
+.site-footer, .page-wrap:after {
+    height: 20px;
+}
+
+.site-footer {
+    background-color: #333333;
+    margin-top: 150px;
+    text-align: -webkit-center;
+    color: white;
+}
+
+.search-container {
+    display: block;
+    min-height: 20px;
+    background-color: #eeeeee;
+    padding: 10px;
+}
+
+.news-edit-container {
+    position: relative;
+    width: 100%;
+    float: left;
+    min-height: 100%;
+    background-color: #d9edf7;
+}
+
+.news-container {
+    display: block;
+    min-height: 50px;
+    background-color: white;
+    padding: 10px;
+}
+
+.news-header {
+    display: block;
+    min-height: 20px;
+    background-color: #aeaeae;
+    padding: 3px;
+}
+
+.news-short {
+    display: block;
+    min-height: 10px;
+    background-color: rgba(125, 255, 0, 0.16);
+    padding: 3px;
+}
+
+.news-info {
+    display: block;
+    width: inherit;
+    min-height: 10px;
+    background-color: #aeaeae;
+    padding: 3px;
+    overflow: hidden;
+}
+
+.search-els {
+    cursor: pointer;
+    line-height: 1;
+    width: 200px;
+}
+
+.author {
+    width: 30%;
+    display: inline;
+    float: left;
+}
+
+.tagses {
+    display: inline;
+    width: 60%;
+    float: left;
+
+}
+
+.news-ref {
+    float: left;
+    width: 70%;
+}
+.news-date {
+    width: 20%;
+    float: right;
+    text-align: right;
+}
+.pagination {
+    display: block;
+    min-height: 20px;
+    background-color: #eeeeee;
+    padding: 10px;
+}
+
+.full-news-container {
+    display: block;
+    min-height: 50px;
+    background-color: white;
+    padding: 10px;
+}
+
+.date-cell {
+    position: relative;
+    width: 94%;
+    padding-left: 3%;
+    padding-right: 3%;
+    min-height: 25px;
+    background-color: #aeaeae;
+}
+
+.view-title {
+    text-align: left;
+    position: relative;
+    width: 94%;
+    padding-left: 3%;
+    padding-right: 3%;
+    min-height: 15px;
+    background-color: #dddddd;
+}
+
+.view-full {
+    position: relative;
+    width: 94%;
+    padding-left: 3%;
+    padding-right: 3%;
+    background-color: white;
+    text-align: justify;
+    overflow: hidden;
+}
+
+.tags {
+    position: relative;
+    width: 94%;
+    padding-left: 3%;
+    padding-right: 3%;
+    min-height: 15px;
+    background-color: #dddddd;
+}
+
+.comments-container {
+    display: block;
+    min-height: 50px;
+    background-color: white;
+    padding: 10px;
+}
+.comment {
+    position: relative;
+    float: left;
+    width: 100%;
+    display: inline;
+    background-color: #eeeeee;
+    overflow: hidden;
+}
+.comment-body{
+    position: relative;
+    float: left;
+    width: 90%;
+    display: inline;
+    background-color: #eeeeee;
+    overflow: hidden;
+}
+.delete-block {
+    position: relative;
+    float: right;
+    width: 5%;
+    display: inline;
+    background-color: #eeeeee;
+}
+
+.pages {
+    display: inline;
+    float: left;
+    width: 80%;
+}
+.most-commented-button {
+    display: inline;
+    float: right;
+    width: 20%;
+}
+.next-prev-container {
+    display: block;
+    min-height: 20px;
+    background-color: white;
+}
+.next {
+    padding-left: 10px;
+    display: inline;
+    float: right;
+    width: 20%;
+}
+.prev {
+    padding-right: 10px;
+    display: inline;
+    float: left;
+    width: 20%;
+    text-align: right;
+}
+.portal-name {
+    float: left;
+    width:70%;
+}
+.header {
+    min-height: 50px;
+    width: 94%;
+    padding: 3%;
+    background-color: #333333;
+}
+.error {
+    display: inline;
+    float: left;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.msg {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+#login-box {
+    width: 300px;
+    padding: 20px;
+    margin: 100px auto;
+    background: #fff;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border: 1px solid #000;
+}
+.menu-bar {
+    position: relative;
+    width: 20%;
+    float: left;
+    height: 100%;
+    background-color: #bce8f1;
+}
+.body {
+    position: relative;
+    width: 80%;
+    float: left;
+    height: 100%;
+    background-color: #dddddd;
+    overflow: scroll;
+}
+ul {
+
+    list-style: square;
+
+}
+
+.authors-container {
+    position: relative;
+    width: 100%;
+    background-color: white;
+    height: 80%;
+    overflow: scroll;
+}
+.author-field {
+    position: relative;
+    display: inline-block;
+    float: left;
+    width:95%;
+    padding: 10px;
+}
+.button-field {
+    position: relative;
+    display: inline-block;
+    width: 50%;
+    padding: 10px;
+}
+.edit-button {
+    position: relative;
+    margin-left: 5px;
+    display: inline;
+    float: right;
+    width: 30%;
+}
+.delete-button {
+    position: relative;
+    margin-left: 5px;
+    display: inline;
+    float: right;
+    width: 30%;
+}
+
+.news-edit{
+    position: relative;
+    display: inline;
+    float: right;
+    width: 10%;
+}
+.title-input {
+    width: 90%;
+    border-radius: 3pt;
+}
+.full-input {
+    width: 90%;
+    height: 50%;
+    border-radius: 3pt;
+}
+
+.news-form {
+    position: relative;
+    width: 90%;
+    align-content: center;
+}
+
+.news-info-block {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.sbm-but {
+    float: left;
+}
+.del-but{
+    float: right;
+}
+
+.languages {
+    display: block;
+    width: 20%;
+    float: right;
+    color: white;
+}
+.logout-field {
+    display: block;
+    width:20%;
+    float: right;
+    padding-top: 5px;
+    color: white;
+}
