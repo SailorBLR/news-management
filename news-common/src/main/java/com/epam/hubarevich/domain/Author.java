@@ -71,8 +71,7 @@ public class Author extends Domain {
     public String toString() {
         return "Author{" +
                 "authorId=" + authorId +
-                ", authorName='" + authorName +
-                '}';
+                ", authorName='" + authorName+'}';
     }
 
     @Override

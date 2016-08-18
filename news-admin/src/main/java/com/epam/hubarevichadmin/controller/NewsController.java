@@ -24,7 +24,6 @@ import java.util.List;
 @Controller
 @Component
 @SessionAttributes("searchCriteria")
-
 public class NewsController {
     @Autowired
     NewsService newsService;

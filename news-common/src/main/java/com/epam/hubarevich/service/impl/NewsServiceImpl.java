@@ -181,6 +181,7 @@ public class NewsServiceImpl implements NewsService {
                 newsDTO.setNews(news);
                 newsDTO.setAuthor(authorDAO.findAuthorByNewsId(news.getNewsId()));
                 newsDTO.setTags(tagDao.getTagsByNewsId(news.getNewsId()));
+                newsDTO.setComments(commentDAO.findCommentsByNewsId(news.getNewsId()));
                 newsDTOs.add(newsDTO);
             }
         } catch (DAOException e) {

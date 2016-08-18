@@ -41,7 +41,7 @@ public class AuthorController {
 
     @RequestMapping(value = "/allAuthors", method = RequestMethod.GET)
     public ModelAndView showAuthorsPage(@ModelAttribute("author") Author author) throws InternalServerException {
-        return formModel();
+        return formModel(null);
     }
 
 
@@ -53,35 +53,41 @@ public class AuthorController {
 
         if(bindingResult.hasErrors()){
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.author", bindingResult);
-            return formModel();
+            return formModel(null);
         }
+
         try {
             authorService.createAuthor(author);
 
         } catch (LogicException e) {
             throw new InternalServerException(e);
         }
-        return formModel();
+        return formModel(null);
     }
 
     @RequestMapping(value = "/updateAuthor", method = RequestMethod.GET)
-    public ModelAndView updateAuthor(@Validated@ModelAttribute("author")Author author,
+    public String updateAuthor(@Validated@ModelAttribute("author")Author author,
                                BindingResult bindingResult,
                                final RedirectAttributes redirectAttributes) throws InternalServerException {
 
+        System.out.println(author);
+        System.out.println(author.getExpired());
         if(bindingResult.hasErrors()){
+            System.out.println("has errors");
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.author", bindingResult);
-            return formModel();
+            return "redirect:/allAuthors";
         }
         try {
+
             authorService.updateAuthor(author);
         } catch (LogicException e) {
-            e.printStackTrace();
+           throw new InternalServerException(e);
         }
-        return formModel();
+        System.out.println(bindingResult);
+        return "redirect:/allAuthors";
     }
 
-    private ModelAndView formModel() throws InternalServerException {
+    private ModelAndView formModel(@ModelAttribute("author") Author author) throws InternalServerException {
         ModelAndView model = new ModelAndView("allAuthors");
         List<Author> authors;
         try {

@@ -13,6 +13,7 @@ public class DateConverter implements Converter<String,Date> {
     @Override
     public Date convert(String s) {
         if (s != null&& !s.equals("")) {
+            System.out.println(s);
             s=s.replace("T"," ");
             Date date=null;
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");

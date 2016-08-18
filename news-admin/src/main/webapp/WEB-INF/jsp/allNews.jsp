@@ -55,7 +55,7 @@
         </div>
         <div class="news-info">
             <div class="author"><spring:message code="label.author"/> ${list.author.authorName}</div>
-            <div class="comments-quantity"><spring:message code="label.comments-quantity"/> ${list.comments.size()})</div>
+            <div class="comments-quantity"><spring:message code="label.comments-quantity"/> ${fn:length(list.comments)})</div>
             <div class="tagses"><spring:message code="label.tag"/> <c:forEach items="${list.tags}" var="tags">${tags.tagName} </c:forEach></div>
             <div class="news-edit"><a href="<spring:url value="/addNews?id=${list.news.newsId}"/>"><spring:message code="label.edit"/></a></div>
         </div>

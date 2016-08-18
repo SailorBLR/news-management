@@ -56,6 +56,7 @@
         </div>
         <div class="news-info">
             <div class="author">Author: ${list.author.authorName}</div>
+            <div class="comments-quantity">Comments(${fn:length(list.comments)})</div>
             <div class="tagses">Tags: <c:forEach items="${list.tags}" var="tags">${tags.tagName} </c:forEach></div>
         </div>
 
