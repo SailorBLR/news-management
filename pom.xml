@@ -55,14 +55,8 @@
                 </configuration>
             </plugin>
         </plugins>
-        <!-- <extensions>
-             <extension>
-                 <groupId>org.apache.maven.wagon</groupId>
-                 <artifactId>wagon-ftp</artifactId>
-                 <version>2.10</version>
-             </extension>
-         </extensions>-->
-
+     
+	 
 
     </build>
 
@@ -190,14 +184,6 @@
         </dependency>
 
     </dependencies>
-    <!--<distributionManagement>
-        <repository>
-            <id>corp1</id>
-            <uniqueVersion>false</uniqueVersion>
-            <layout>default</layout>
-            <url>scp://repo/maven2</url>
-            <name>Corporate Repository</name>
-        </repository>
-    </distributionManagement>-->
+    
 
 </project>
