@@ -11,15 +11,12 @@ import java.util.List;
  * Created by Anton_Hubarevich on 6/23/2016.
  */
 public interface NewsService {
+
     Long createNews(NewsDTO newsDTO) throws LogicException;
 
     void deleteNews(Long newsId) throws LogicException;
 
-    List<NewsDTO> searchForNews(SearchDTO searchDTO) throws LogicException;
-
     Long updateNews(NewsDTO newsDTO) throws LogicException;
-
-    List<NewsDTO> searchForNewsCommented(boolean mostCommented, int quantityMoastCommented) throws LogicException;
 
     void unwireNewsTags(long newsId) throws LogicException;
 

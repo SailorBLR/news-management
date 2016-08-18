@@ -21,7 +21,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by Anton_Hubarevich on 6/27/2016.
+ * Test class for Comment service
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CommentServiceImplTest {
@@ -34,7 +34,7 @@ public class CommentServiceImplTest {
     CommentDAO commentDAO;
 
     @Test
-    public void testCreateAuthor() {
+    public void testAddComment() {
         try {
             Comment comment = new Comment(1L,1L, "Name","Anton", Calendar.getInstance().getTime());
             when(commentDAO.create(comment)).thenReturn(1L);
@@ -63,5 +63,17 @@ public class CommentServiceImplTest {
         } catch (DAOException | LogicException e) {
             LOG.error(e);
         }
+    }
+
+
+    @Test (expected = NumberFormatException.class)
+    public void testDeleteAllCommentsFromNews(){
+        try {
+            doThrow(new NumberFormatException()).when(commentDAO).deleteCommentsByNewsId(anyLong());
+            commentService.deleteAllCommentsFromNews(anyLong());
+        } catch (DAOException|LogicException e) {
+            LOG.error(e);
+        }
+
     }
 }

@@ -72,23 +72,6 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> searchForNews(SearchDTO searchDTO) throws LogicException {
-        List<News> newses = null;
-        if (NewsCheckUtil.checkSearchDto(searchDTO)) {
-            try {
-                if (searchDTO.getAuthor() != null) {
-                    newses = newsDAO.findNewsByAuthor(searchDTO.getAuthor());
-                } else {
-                    newses = newsDAO.findNewsByTags(searchDTO.getTags());
-                }
-            } catch (DAOException e) {
-                throw new LogicException(e);
-            }
-        }
-        return makeDto(newses);
-    }
-
-    @Override
     public Long updateNews(NewsDTO newsDTO) throws LogicException {
         Long successMarker = 0L;
         if (NewsCheckUtil.checkNewsDto(newsDTO)) {
@@ -107,22 +90,6 @@ public class NewsServiceImpl implements NewsService {
         return successMarker;
     }
 
-    @Override
-    public List<NewsDTO> searchForNewsCommented(boolean mostCommented,
-                                                int quantityMostCommented) throws LogicException {
-        List<News> newses;
-        try {
-            if (!mostCommented) {
-                newses = newsDAO.findAll();
-            } else {
-                newses = newsDAO.getMostCommentedNews(quantityMostCommented);
-            }
-
-        } catch (DAOException e) {
-            throw new LogicException(e);
-        }
-        return makeDto(newses);
-    }
 
     @Override
     public void unwireNewsTags(long newsId) throws LogicException {
@@ -131,18 +98,16 @@ public class NewsServiceImpl implements NewsService {
         } catch (DAOException e) {
             throw new LogicException(e);
         }
-
     }
 
     @Override
     public int getSearchNewsQuantity(SearchDTO searchDTO) throws LogicException {
-        int quantity = 0;
+        int quantity;
         try {
             quantity = newsDAO.getTotalNewsQuantity(searchDTO);
 
         } catch (DAOException e) {
             throw new LogicException(e);
-
         }
         return quantity;
     }
