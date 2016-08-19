@@ -1,8 +1,10 @@
 package com.epam.hubarevichadmin.controller;
 
+import com.epam.hubarevich.domain.Author;
 import com.epam.hubarevich.domain.Tag;
 import com.epam.hubarevich.service.TagService;
 import com.epam.hubarevich.service.exception.LogicException;
+import com.epam.hubarevichadmin.exception.InternalServerException;
 import com.epam.hubarevichadmin.validation.TagValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,17 +41,10 @@ public class TagController {
      * @return ModelAndView object
      */
     @RequestMapping(value = "/allTags", method = RequestMethod.GET)
-    public ModelAndView showAll() {
-        List<Tag> tags;
-        ModelAndView model = new ModelAndView("allTags");
+    public ModelAndView showAll(@ModelAttribute("tag") Tag tag) throws InternalServerException {
 
-        try {
-            tags = tagService.getListOfTags();
-            model.addObject("tags", tags);
-            model.addObject("tag", new Tag());
-        } catch (LogicException e) {
-            e.printStackTrace();
-        }
+        ModelAndView model = new ModelAndView();
+        formModel(model);
         return model;
     }
 
@@ -62,20 +57,24 @@ public class TagController {
      * @return String redirect address
      */
     @RequestMapping(value = "/addTag", method = RequestMethod.GET)
-    public String createNewTag(@Validated @ModelAttribute("tag") Tag tag,
-                               BindingResult bindingResult,
-                               final RedirectAttributes redirectAttributes) {
+    public ModelAndView createNewTag(@Validated @ModelAttribute("tag") Tag tag,
+                                     BindingResult bindingResult,
+                                     final RedirectAttributes redirectAttributes) throws InternalServerException {
+        ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.tag", bindingResult);
-            return ("redirect:/allTags");
+            formModel(modelAndView);
+            return modelAndView;
         } else {
             try {
                 tagService.addNewTag(tag);
+                modelAndView.addObject("tag", new Tag());
+                formModel(modelAndView);
             } catch (LogicException e) {
-                e.printStackTrace();
+                throw new InternalServerException(e);
             }
         }
-        return ("redirect:/allTags");
+        return modelAndView;
     }
 
     /**
@@ -85,42 +84,58 @@ public class TagController {
      * @return String redirect address
      */
     @RequestMapping(value = "/deleteTag", method = RequestMethod.GET)
-    public String deleteTag(@RequestParam(value = "tagId") Long tagId) {
+    public ModelAndView deleteTag(@RequestParam(value = "tagId") Long tagId) throws InternalServerException {
 
+        ModelAndView modelAndView = new ModelAndView();
         try {
             tagService.deleteTag(tagId);
         } catch (LogicException e) {
-            e.printStackTrace();
+            throw new InternalServerException(e);
         }
-
-
-        return ("redirect:/allTags");
+        formModel(modelAndView);
+        return modelAndView;
     }
 
     /**
      * Updates Tag object in DB
-     * @param tag formed Tag object
-     * @param bindingResult object to transfer binding result
+     *
+     * @param tag                formed Tag object
+     * @param bindingResult      object to transfer binding result
      * @param redirectAttributes flash messages
      * @return String redirect to address
      */
     @RequestMapping(value = "/updateTag", method = RequestMethod.GET)
-    public String updateTag(@Validated @ModelAttribute("tag") Tag tag,
-                            BindingResult bindingResult,
-                            final RedirectAttributes redirectAttributes) {
+    public ModelAndView updateTag(@Validated @ModelAttribute("tag") Tag tag,
+                                  BindingResult bindingResult,
+                                  final RedirectAttributes redirectAttributes) throws InternalServerException {
 
+        ModelAndView modelAndView = new ModelAndView();
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.tag", bindingResult);
-            return ("redirect:/allTags");
+            formModel(modelAndView);
+            return modelAndView;
         } else {
             try {
                 tagService.updateTag(tag);
+                modelAndView.addObject("tag", new Tag());
+                formModel(modelAndView);
             } catch (LogicException e) {
-                e.printStackTrace();
+                throw new InternalServerException(e);
             }
         }
-        return ("redirect:/allTags");
+        return modelAndView;
+    }
+
+    private void formModel(ModelAndView model) throws InternalServerException {
+        model.setViewName("allTag");
+        List<Tag> tags;
+        try {
+            tags = tagService.getListOfTags();
+            model.addObject("tags", tags);
+        } catch (LogicException e) {
+            throw new InternalServerException(e);
+        }
     }
 
 }

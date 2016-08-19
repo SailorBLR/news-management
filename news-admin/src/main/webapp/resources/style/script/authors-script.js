@@ -43,4 +43,8 @@ function updateAuthor (authorId) {
     $( "#form".concat(authorId) ).submit();
 }
 
+function addAuthor(){
+    $( "#addform").submit();
+}
+
 

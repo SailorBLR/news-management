@@ -23,11 +23,11 @@ public class TagValidatorUtil implements Validator {
         Tag tag = (Tag) object;
 
         if(tag.getTagName() == null||tag.getTagName().equals("")) {
-            errors.rejectValue("tagName", "You must provide Tag Name!");
+            errors.rejectValue("tagName", "error.tag.no.data");
         }
 
         if(tag.getTagName().length()>20||tag.getTagName().length()<2){
-            errors.rejectValue("tagName", "Too long tagname");
+            errors.rejectValue("tagName", "error.tag.too.long");
         }
 
     }

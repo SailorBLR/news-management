@@ -6,6 +6,9 @@
     <spring:url value="/resources/style/script/tags-script.js" var="mainJs"/>
     <script src="${mainJs}"></script>
 </head>
+<sf:form modelAttribute="tag">
+    <sf:errors path="tagName" cssClass="error"/>
+</sf:form>
 
 <div class="authors-container">
     <h1><spring:message code="label.tags"/></h1>
@@ -43,7 +46,6 @@
 </div>
 <div>
     <sf:form modelAttribute="tag" action="/addTag" method="GET">
-        <sf:errors path="tagName"/>
         <p><spring:message code="label.add.tag"/> <sf:input path="tagName"/>
             <sf:button type="submit" value="Create">
                 <spring:message code="label.add"/>

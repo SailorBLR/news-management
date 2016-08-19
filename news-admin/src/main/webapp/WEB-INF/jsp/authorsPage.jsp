@@ -17,7 +17,7 @@
         <div class="author-field">
             <div style="display: block; ">
                 <div style="display: inline; width: 50%; float: left">
-                    <sf:form id="form${authors.authorId}" modelAttribute="author" action="/updateAuthor" method="GET">
+                    <sf:form id="form${authors.authorId}" modelAttribute="author" action="/updateAuthor" method="POST">
                         <sf:hidden  name="authorId" path="authorId" value="${authors.authorId}"/>
                         <sf:hidden name="expired" id="exp${authors.authorId}" path="expired" value="${authors.expired}" />
 
@@ -48,10 +48,10 @@
 
 </div>
 <div>
-    <sf:form action="/addAuthor" modelAttribute="author" method="get">
+    <sf:form id="addform" action="/addAuthor" modelAttribute="author" method="POST">
 
         <p><spring:message code="label.add.author"/> <sf:input name="authorName" path="authorName"/>
-            <sf:button><spring:message code="label.create"/></sf:button></p>
+            <button onclick="addAuthor()"><spring:message code="label.create"/></button></p>
     </sf:form>
 
 

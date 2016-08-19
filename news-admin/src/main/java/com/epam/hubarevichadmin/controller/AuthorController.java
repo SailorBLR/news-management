@@ -9,6 +9,7 @@ import com.epam.hubarevichadmin.validation.AuthorValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -39,63 +40,76 @@ public class AuthorController {
         binder.setValidator(authorValidatorUtil);
     }
 
+
     @RequestMapping(value = "/allAuthors", method = RequestMethod.GET)
-    public ModelAndView showAuthorsPage(@ModelAttribute("author") Author author) throws InternalServerException {
-        return formModel(null);
+    public ModelAndView showAuthorsPage(@ModelAttribute("author") Author author
+    ) throws InternalServerException {
+
+        ModelAndView modelAndView = new ModelAndView();
+        formModel(modelAndView);
+        return modelAndView;
+
     }
 
-
-    @RequestMapping(value = "/addAuthor", method = RequestMethod.GET)
+    @RequestMapping(value = "/addAuthor", method = RequestMethod.POST)
     public ModelAndView createNewAuthor(@Validated@ModelAttribute("author") Author author,
-                                  BindingResult bindingResult,
-                                  final RedirectAttributes redirectAttributes) throws InternalServerException {
+                                        BindingResult bindingResult,
+                                        final RedirectAttributes redirectAttributes, ModelAndView model) throws InternalServerException {
 
+        ModelAndView modelAndView = new ModelAndView();
 
         if(bindingResult.hasErrors()){
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.author", bindingResult);
-            return formModel(null);
+            formModel(modelAndView);
+            return modelAndView;
         }
 
         try {
             authorService.createAuthor(author);
-
+            modelAndView.addObject("author",new Author());
+            formModel(modelAndView);
         } catch (LogicException e) {
             throw new InternalServerException(e);
         }
-        return formModel(null);
+        return modelAndView;
     }
 
-    @RequestMapping(value = "/updateAuthor", method = RequestMethod.GET)
-    public String updateAuthor(@Validated@ModelAttribute("author")Author author,
+    @RequestMapping(value = "/updateAuthor", method = RequestMethod.POST)
+    public ModelAndView updateAuthor(@Validated@ModelAttribute("author")Author author,
                                BindingResult bindingResult,
                                final RedirectAttributes redirectAttributes) throws InternalServerException {
 
-        System.out.println(author);
-        System.out.println(author.getExpired());
+        ModelAndView modelAndView = new ModelAndView();
         if(bindingResult.hasErrors()){
-            System.out.println("has errors");
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.author", bindingResult);
-            return "redirect:/allAuthors";
+            author.setExpired(null);
+            formModel(modelAndView);
+            return modelAndView;
         }
         try {
 
             authorService.updateAuthor(author);
+            redirectAttributes.addFlashAttribute("author",new Author());
+            modelAndView.addObject("author",new Author());
+            formModel(modelAndView);
         } catch (LogicException e) {
-           throw new InternalServerException(e);
+            throw new InternalServerException(e);
         }
-        System.out.println(bindingResult);
-        return "redirect:/allAuthors";
+        return modelAndView;
     }
 
-    private ModelAndView formModel(@ModelAttribute("author") Author author) throws InternalServerException {
-        ModelAndView model = new ModelAndView("allAuthors");
+
+
+    private void formModel(ModelAndView model) throws InternalServerException {
+        model.setViewName("allAuthor");
+
         List<Author> authors;
         try {
             authors = authorService.getListOfAuthors();
             model.addObject("authors", authors);
+
         } catch (LogicException e) {
             throw new InternalServerException(e);
         }
-        return model;
     }
 }
