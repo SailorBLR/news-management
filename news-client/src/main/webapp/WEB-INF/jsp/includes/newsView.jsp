@@ -29,11 +29,11 @@
 <c:set var="previous" value="${searchCriteria.getPrevId()}" scope="page"/>
 <c:set var="next" value="${searchCriteria.getNextId()}" scope="page"/>
 <div class="next-prev-container">
-    <c:if test="${next!=null}">
-        <div class="next"><a href="<c:url value="/controller?command=newsMessage&id=${next}"/>">Next</a></div>
-    </c:if>
     <c:if test="${previous!=null}">
         <div class="prev"><a href="<c:url value="/controller?command=newsMessage&id=${previous}"/>">Previous</a></div>
+    </c:if>
+    <c:if test="${next!=null}">
+        <div class="next"><a href="<c:url value="/controller?command=newsMessage&id=${next}"/>">Next</a></div>
     </c:if>
 </div>
 <div class="comments-container">

@@ -189,13 +189,13 @@ public class StatementFillerUtil {
      */
     private int getOperationCode (SearchDTO searchDTO) {
         int searchCode = 4;
-        if (searchDTO.getAuthor() != null & searchDTO.getTags() == null) {
+        if (searchDTO.getAuthor() != null && searchDTO.getTags() == null) {
             searchCode = 1;
         }
-        if (searchDTO.getAuthor() != null & searchDTO.getTags() != null) {
+        if (searchDTO.getAuthor() != null && searchDTO.getTags() != null) {
             searchCode = 2;
         }
-        if (searchDTO.getAuthor() == null & searchDTO.getTags() != null) {
+        if (searchDTO.getAuthor() == null && searchDTO.getTags() != null) {
             searchCode = 3;
         }
         return searchCode;

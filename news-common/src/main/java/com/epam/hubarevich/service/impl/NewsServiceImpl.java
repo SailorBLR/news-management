@@ -84,7 +84,7 @@ public class NewsServiceImpl implements NewsService {
                 newsDAO.addNewsAuthor(newsDTO.getNews().getNewsId(), newsDTO.getAuthor().getAuthorId());
                 successMarker = 1L;
             } catch (DAOException e) {
-                throw new LogicException();
+                throw new LogicException(e);
             }
         }
         return successMarker;

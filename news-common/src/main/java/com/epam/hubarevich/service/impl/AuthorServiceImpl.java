@@ -41,7 +41,7 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             authorDAO.delete(authorId);
         } catch (DAOException e) {
-            throw new LogicException();
+            throw new LogicException(e);
         }
     }
 

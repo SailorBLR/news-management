@@ -1,0 +1,11 @@
+com.epam.hubarevich.dao
+com.epam.hubarevich.dao.exception
+com.epam.hubarevich.dao.impl
+com.epam.hubarevich.domain
+com.epam.hubarevich.domain.dto
+com.epam.hubarevich.service
+com.epam.hubarevich.service.exception
+com.epam.hubarevich.service.impl
+com.epam.hubarevich.utils
+testcom.epam.hubarevich.dao.impl
+testcom.epam.hubarevich.service.impl

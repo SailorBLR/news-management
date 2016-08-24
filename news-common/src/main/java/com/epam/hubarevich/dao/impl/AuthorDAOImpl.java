@@ -107,7 +107,7 @@ public class AuthorDAOImpl implements AuthorDAO {
                 authorId = resultSet.getLong(1);
             }
         } catch (SQLException e) {
-            throw new DAOException();
+            throw new DAOException(e);
         }
         return authorId;
     }

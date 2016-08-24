@@ -48,13 +48,14 @@ public class AllNews implements ActionCommand {
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         String nextPage = request.getParameter(NEXT_PAGE);
+        
 
         int page = 1;
-        if (!nextPage.equals("1")) {
+        if (!"1".equals(nextPage)) {
             page = Integer.valueOf(nextPage);
         }
         SearchDTO searchDTO = (SearchDTO) request.getSession().getAttribute(SEARCHDTO);
-        if (request.getParameter(AUTHORSNAME) != null && !request.getParameter(AUTHORSNAME).equals("0")) {
+        if (request.getParameter(AUTHORSNAME) != null && !"0".equals(request.getParameter(AUTHORSNAME))) {
             Author author = new Author();
             author.setAuthorId(Long.valueOf(request.getParameter(AUTHORSNAME)));
             searchDTO.setAuthor(author);

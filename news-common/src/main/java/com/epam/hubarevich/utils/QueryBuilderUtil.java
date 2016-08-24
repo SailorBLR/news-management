@@ -74,7 +74,7 @@ public class QueryBuilderUtil {
         if (author) {
             query = query.concat(SQL_WHERE_AUTHOR);
         }
-        if (author & tags) {
+        if (author && tags) {
             query = query.concat(SQL_AND);
         }
         if (tags) {

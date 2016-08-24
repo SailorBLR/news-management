@@ -30,7 +30,7 @@ public class NewsCheckUtil {
 
     public static boolean checkSearchDto(SearchDTO searchDto) {
         boolean success = true;
-        if (searchDto.getAuthor() == null & searchDto.getTags() == null) {
+        if (searchDto.getAuthor() == null && searchDto.getTags() == null) {
             success = false;
         }
         if (searchDto.getTags() != null) {

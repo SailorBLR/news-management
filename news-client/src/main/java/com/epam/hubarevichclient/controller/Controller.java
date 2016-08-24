@@ -59,6 +59,12 @@ public class Controller extends HttpServlet {
     private void processRequest(HttpServletRequest request,
                                 HttpServletResponse response)
             throws ServletException, IOException {
+    	
+    	LOG.info(request.getSession().getAttribute("searchCriteria"));
+    	LOG.info(request.getParameter("clearMarker"));
+    	LOG.info(request.getAttribute("clearMarker"));
+    	
+    	
         if (request.getSession().getAttribute("searchCriteria")!=null) {
             SearchDTO searchDTO = (SearchDTO) request.getSession().getAttribute("searchCriteria");
         } else {

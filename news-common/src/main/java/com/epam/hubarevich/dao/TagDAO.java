@@ -27,5 +27,11 @@ public interface TagDAO extends AbstractDAO<Tag> {
      */
     void unwireTagsNewsByNews(Long newsId) throws DAOException;
 
-     void unwireTagsNewsByTags(Long tagId) throws DAOException;
+    
+  /**
+   * Deletes dependencies tag-news from table Tags-News
+   * @param tagId
+   * @throws DAOException
+   */
+    void unwireTagsNewsByTags(Long tagId) throws DAOException;
 }
