@@ -1,8 +1,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<script src="<c:url value="/resources/style/script/news-script.js"/>"></script>
 <script src="<c:url value="/resources/style/script/fSelect.js" />"></script>
+<script src="<c:url value="/resources/style/script/all-news-script.js" />"></script>
 <link href="<c:url value="/resources/style/css/fSelect.css" />" rel="stylesheet">
 <script>
     (function ($) {
@@ -16,10 +16,11 @@
 </script>
 
 <div class="search-container">
-    <form action="<c:url value="/controller"/>" method="get">
+    <form id="search-form" action="<c:url value="/controller"/>" method="get">
         <input type="hidden" name="command" value="allNews">
         <input type="hidden" id="tagList" name="tagsSet">
         <input type="hidden" name="nextPage" value="1">
+        <input type="hidden" id="clear" name="clearMarker" value="false">
         <label> Search: </label>
         <br>
         <select class="tags" multiple="multiple" name="tagses" id="ts">
@@ -36,6 +37,7 @@
         </select>
 
         <div class="search-els"><input type="submit" value="Search"/></div>
+        <div class="refresh-button"><input type="button" value="Refresh" onclick="clearSearch()"></div>
     </form>
 </div>
 

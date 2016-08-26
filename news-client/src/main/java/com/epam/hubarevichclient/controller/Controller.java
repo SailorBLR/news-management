@@ -19,14 +19,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Anton_Hubarevich on 7/14/2016.
- */
+
 @Component
 @WebServlet("/controller")
 public class Controller extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(Controller.class);
     private static final long serialVersionUID = 1L;
+    private static final String MAIN_PAGE = "/WEB-INF/jsp/main.jsp";
     private WebApplicationContext webApplicationContext;
 
     /**
@@ -60,14 +59,11 @@ public class Controller extends HttpServlet {
                                 HttpServletResponse response)
             throws ServletException, IOException {
     	
-    	LOG.info(request.getSession().getAttribute("searchCriteria"));
-    	LOG.info(request.getParameter("clearMarker"));
-    	LOG.info(request.getAttribute("clearMarker"));
-    	
-    	
-        if (request.getSession().getAttribute("searchCriteria")!=null) {
-            SearchDTO searchDTO = (SearchDTO) request.getSession().getAttribute("searchCriteria");
-        } else {
+
+        System.out.println("log " + request.getParameter("clearMarker"));
+        System.out.println("log " + request.getSession().getAttribute("searchCriteria"));
+        if("true".equals(request.getParameter("clearMarker"))
+                |request.getSession().getAttribute("searchCriteria")==null){
             SearchDTO searchDTO = new SearchDTO();
             request.getSession().setAttribute("searchCriteria",searchDTO);
         }
@@ -77,13 +73,14 @@ public class Controller extends HttpServlet {
 
         try {
             include = command.execute(request);
+
         } catch (CommandException e) {
-            e.printStackTrace();
+            throw new ServletException(e);
         }
 
         request.setAttribute("include",include);
         RequestDispatcher dispatcher = getServletContext()
-                .getRequestDispatcher("/WEB-INF/jsp/main.jsp");
+                .getRequestDispatcher(MAIN_PAGE);
         dispatcher.forward(request, response);
     }
 

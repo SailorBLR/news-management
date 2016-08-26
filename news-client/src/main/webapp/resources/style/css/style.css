@@ -225,15 +225,16 @@ aside {
 .next {
     padding-left: 10px;
     display: inline;
-    float: left;
+    float: right;
     width: 45%;
+    text-align: right;
 }
 .prev {
     padding-right: 10px;
     display: inline;
-    float: right;
+    float: left;
     width: 45%;
-    text-align: right;
+    text-align: left;
 }
 .portal-name {
     float: left;
@@ -244,4 +245,7 @@ aside {
     width: 94%;
     padding: 3%;
     background-color: #333333;
+}
+.refresh-button{
+    padding-top: 3px;
 }
