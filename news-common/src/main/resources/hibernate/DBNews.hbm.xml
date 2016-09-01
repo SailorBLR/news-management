@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.epam.hubarevich.domain.News" table="NEWS">
+        <id name="newsId" type="long">
+            <column name="NEWS_ID" precision="5" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">NEWS_SEQ</param>
+            </generator>
+        </id>
+        <property name="title" type="string">
+            <column name="TITLE" length="20" not-null="true" />
+        </property>
+        <property name="shortText" type="string">
+            <column name="SHORT_TEXT" length="100" not-null="true" />
+        </property>
+        <property name="fullText" type="string">
+            <column name="FULL_TEXT" length="2000" not-null="true" />
+        </property>
+        <property name="newsCreationDate" type="date">
+            <column name="CREATION_DATE" not-null="true" />
+        </property>
+        <property name="newsModificationDate" type="date">
+            <column name="MODIFICATION_DATE" not-null="true" />
+        </property>
+        <set name="authors" table="NEWS_AUTHORS"
+             inverse="false" lazy="false" fetch="select">
+            <key column="NEWS_ID" />
+            <many-to-many column="AUTHOR_ID" class="com.epam.hubarevich.domain.Author"/>
+        </set>
+
+        <set name="tags" table="NEWS_TAGS"
+             inverse="false" lazy="false" fetch="select">
+            <key column="NEWS_ID" />
+            <many-to-many column="TAG_ID" class="com.epam.hubarevich.domain.Tag"/>
+        </set>
+
+        <set name="comments" table="COMMENTS"
+             inverse="true" lazy="false" fetch="select" cascade="delete, delete-orphan">
+            <key>
+                <column name="NEWS_ID" not-null="true" />
+            </key>
+            <one-to-many class="com.epam.hubarevich.domain.Comment" />
+        </set>
+    </class>
+</hibernate-mapping>

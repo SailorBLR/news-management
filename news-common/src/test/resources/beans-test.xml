@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource">
+    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
         <property name="username" value="Test"/>
@@ -15,6 +15,7 @@
     </bean>
 
     <context:component-scan base-package="com.epam.hubarevich" />
+    <tx:annotation-driven />
 
 
     <bean id="dbUnitDatabaseConfig" class="com.github.springtestdbunit.bean.DatabaseConfigBean">
@@ -31,10 +32,53 @@
         <property name="schema" value="TEST"/>
     </bean>
 
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <context:property-placeholder location="classpath:config.properties"/>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceProviderClass" value="org.hibernate.ejb.HibernatePersistence"/>
         <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.epam.hubarevich.domain"/> <!-- пакет, в котором находятся доменные классы -->
+        <property name="jpaPropertyMap">
+            <map>
+                <entry key="hibernate.show_sql" value="true"/>
+                <entry key="hibernate.format_sql" value="true"/>
+                <entry key="hibernate.hbm2ddl.auto" value="create"/>
+            </map>
+        </property>
+    </bean>
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:test-hibernate.cfg.xml" />
     </bean>
 
-    <context:property-placeholder location="classpath:config.properties"/>
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="authorDao" class="com.epam.hubarevich.dao.impl.AuthorDaoImpl">
+        <constructor-arg>
+            <ref bean="sessionFactory" />
+        </constructor-arg>
+    </bean>
+
+    <bean id="newsDao" class="com.epam.hubarevich.dao.impl.NewsDaoImpl">
+        <constructor-arg>
+            <ref bean="sessionFactory" />
+        </constructor-arg>
+    </bean>
+
+    <bean id="tagDao" class="com.epam.hubarevich.dao.impl.TagDaoImpl">
+        <constructor-arg>
+            <ref bean="sessionFactory" />
+        </constructor-arg>
+    </bean>
+
+    <bean id="commentDao" class="com.epam.hubarevich.dao.impl.CommentDaoImpl">
+        <constructor-arg>
+            <ref bean="sessionFactory" />
+        </constructor-arg>
+    </bean>
 
 </beans>

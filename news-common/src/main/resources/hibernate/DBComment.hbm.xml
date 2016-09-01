@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.epam.hubarevich.domain.Comment" table="COMMENTS">
+        <id name="commentId" type="long">
+            <column name="COMMENT_ID" precision="5" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">COMMENTS_SEQ</param>
+            </generator>
+        </id>
+       <!-- <property name="newsId" type="long">
+            <column name="NEWS_ID" not-null="true"/>
+        </property>-->
+        <property name="commentText" type="string">
+            <column name="COMMENT_TEXT" length="100" not-null="true" />
+        </property>
+        <property name="commentAuthor" type="string">
+            <column name="COMMENT_AUTHOR" length="20" not-null="true" />
+        </property>
+        <property name="commentCreationDate" type="date">
+            <column name="CREATION_DATE" not-null="true" />
+        </property>
+
+
+        <many-to-one name="news" class="com.epam.hubarevich.domain.News"
+                     fetch="select" lazy="false">
+            <column name="NEWS_ID" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

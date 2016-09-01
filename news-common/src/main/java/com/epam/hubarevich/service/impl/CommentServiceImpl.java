@@ -3,8 +3,6 @@ package com.epam.hubarevich.service.impl;
 import com.epam.hubarevich.dao.CommentDAO;
 import com.epam.hubarevich.dao.NewsDAO;
 import com.epam.hubarevich.dao.exception.DAOException;
-import com.epam.hubarevich.dao.impl.CommentDAOImpl;
-import com.epam.hubarevich.dao.impl.NewsDAOImpl;
 import com.epam.hubarevich.domain.Comment;
 import com.epam.hubarevich.service.CommentService;
 import com.epam.hubarevich.service.exception.LogicException;
@@ -19,10 +17,10 @@ import org.springframework.stereotype.Component;
 public class CommentServiceImpl implements CommentService {
 
     @Autowired
-    CommentDAO commentDAO = new CommentDAOImpl();
+    CommentDAO commentDAO;
 
     @Autowired
-    NewsDAO newsDAO = new NewsDAOImpl();
+    NewsDAO newsDAO;
 
     @Override
     public Long addComment(Comment comment) throws LogicException {

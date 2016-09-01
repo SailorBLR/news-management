@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Class used to represent News message entity
@@ -41,6 +42,33 @@ public class News extends Domain {
      */
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date newsModificationDate;
+    private Set<Comment> comments;
+    private Set<Author> authors;
+    private Set<Tag> tags;
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
 
     public News() {
     }

@@ -1,5 +1,7 @@
 package com.epam.hubarevich.domain;
 
+import java.util.Set;
+
 /**
  * Class used to represent Tag entity
  * @author Anton_Hubarevich
@@ -17,6 +19,15 @@ public class Tag extends Domain {
      * Tag name
      */
     private String tagName;
+    private Set<News> news;
+
+    public Set<News> getNews() {
+        return news;
+    }
+
+    public void setNews(Set<News> news) {
+        this.news = news;
+    }
 
     public Tag() {
     }

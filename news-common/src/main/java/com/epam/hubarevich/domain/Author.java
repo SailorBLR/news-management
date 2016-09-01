@@ -3,6 +3,7 @@ package com.epam.hubarevich.domain;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Class used to represent Author entity
@@ -28,7 +29,14 @@ public class Author extends Domain {
      */
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date expired;
+    private Set<News> news;
 
+    public Set<News> getNews() {
+        return news;
+    }
+    public void setNews(Set<News> news) {
+        this.news = news;
+    }
     public Author() {
     }
 
@@ -91,7 +99,7 @@ public class Author extends Domain {
         if (!authorName.equals(author.authorName)) {
             return false;
         }
-        return !(expired != null ? !expired.equals(author.expired) : author.expired != null);
+        return true;
 
     }
 
@@ -99,7 +107,6 @@ public class Author extends Domain {
     public int hashCode() {
         int result = authorId.hashCode();
         result = 31 * result + authorName.hashCode();
-        result = 31 * result + (expired != null ? expired.hashCode() : 0);
         return result;
     }
 }

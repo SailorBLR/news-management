@@ -36,6 +36,15 @@ public class Comment extends Domain {
      */
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date commentCreationDate;
+    private News news;
+
+    public News getNews() {
+        return news;
+    }
+
+    public void setNews(News news) {
+        this.news = news;
+    }
 
     public Comment() {
     }
@@ -103,11 +112,8 @@ public class Comment extends Domain {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Comment comment = (Comment) o;
-
         if (!commentId.equals(comment.commentId)) return false;
-        if (!newsId.equals(comment.newsId)) return false;
         if (!commentText.equals(comment.commentText)) return false;
         if (!commentAuthor.equals(comment.commentAuthor)) return false;
         return commentCreationDate.equals(comment.commentCreationDate);
@@ -117,7 +123,6 @@ public class Comment extends Domain {
     @Override
     public int hashCode() {
         int result = commentId.hashCode();
-        result = 31 * result + newsId.hashCode();
         result = 31 * result + commentText.hashCode();
         result = 31 * result + commentAuthor.hashCode();
         result = 31 * result + commentCreationDate.hashCode();
@@ -128,7 +133,6 @@ public class Comment extends Domain {
     public String toString() {
         return "Comment{" +
                 "commentId=" + commentId +
-                ", newsId=" + newsId +
                 ", commentText='" + commentText + '\'' +
                 ", commentAuthor='" + commentAuthor + '\'' +
                 ", commentCreationDate=" + commentCreationDate +

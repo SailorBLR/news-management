@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.epam.hubarevich.domain.Author" table="AUTHORS">
+        <id name="authorId" type="long">
+            <column name="AUTHOR_ID" precision="5" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">AUTHORS_SEQ</param>
+            </generator>
+        </id>
+        <property name="authorName" type="string">
+            <column name="AUTHOR_NAME" length="20" not-null="true" />
+        </property>
+        <property name="expired" type="date">
+            <column name="EXPIRED" not-null="false" />
+        </property>
+        <set name="news" table="NEWS_AUTHORS"
+             inverse="false" lazy="false" fetch="select">
+            <key column="AUTHOR_ID" />
+            <many-to-many column="NEWS_ID" class="com.epam.hubarevich.domain.News"/>
+        </set>
+
+    </class>
+</hibernate-mapping>

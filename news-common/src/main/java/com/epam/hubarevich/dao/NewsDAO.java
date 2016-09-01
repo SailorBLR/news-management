@@ -82,7 +82,7 @@ public interface NewsDAO extends AbstractDAO<News>{
      * @param newsId current news id
      * @throws DAOException in case of SQL exception
      */
-    void getPrevNextIds(SearchDTO searchDTO,Long newsId) throws DAOException;
+    void getPrevNextIds(SearchDTO searchDTO, Long newsId) throws DAOException;
 
     /**
      * Searches for a news by title
