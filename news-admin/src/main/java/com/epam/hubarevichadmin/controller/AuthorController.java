@@ -101,7 +101,7 @@ public class AuthorController {
 
 
     private void formModel(ModelAndView model) throws InternalServerException {
-        model.setViewName("allAuthor");
+        model.setViewName("allAuthors");
 
         List<Author> authors;
         try {

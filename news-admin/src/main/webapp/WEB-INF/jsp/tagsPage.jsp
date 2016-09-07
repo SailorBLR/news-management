@@ -16,7 +16,7 @@
         <div class="author-field">
             <div style="display: block; ">
                 <div style="display: inline; width: 50%; float: left">
-                    <sf:form id="form${tagInfo.tagId}" action="/updateTag" modelAttribute="tag" method="GET">
+                    <sf:form id="form${tagInfo.tagId}" action="/updateTag" modelAttribute="tag" method="POST">
                         <sf:hidden path="tagId" name="tagId" value="${tagInfo.tagId}"/>
                         <p><spring:message code="label.tag"/> <sf:input path="tagName" id="${tagInfo.tagId}" type="text" name="tagName"
                                           value="${tagInfo.tagName}" readonly="true"/></p>
@@ -45,7 +45,7 @@
 
 </div>
 <div>
-    <sf:form modelAttribute="tag" action="/addTag" method="GET">
+    <sf:form modelAttribute="tag" action="/addTag" method="POST">
         <p><spring:message code="label.add.tag"/> <sf:input path="tagName"/>
             <sf:button type="submit" value="Create">
                 <spring:message code="label.add"/>

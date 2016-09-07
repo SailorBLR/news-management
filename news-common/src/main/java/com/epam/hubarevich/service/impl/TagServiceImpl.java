@@ -16,6 +16,7 @@ import java.util.List;
  */
 
 @Component
+@Transactional
 public class TagServiceImpl implements TagService {
     @Autowired
     TagDAO tagDAO;

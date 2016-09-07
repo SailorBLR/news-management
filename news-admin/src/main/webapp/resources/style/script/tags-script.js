@@ -22,8 +22,10 @@ function hideButtons (tagId){
 }
 
 function deleteTag (tagId){
-    $("#form".concat(tagId)).attr('action', '/deleteTag');
-    $( "#form".concat(tagId) ).submit();
+    /*$("#form".concat(tagId)).attr('action', '/deleteTag');
+    $( "#form".concat(tagId) ).submit();*/
+    var button = location.href = '/deleteTag?tagId='.concat(tagId);
+    return button;
 }
 
 function updateTag (tagId) {

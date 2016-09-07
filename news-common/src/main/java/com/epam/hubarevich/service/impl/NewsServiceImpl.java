@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -26,6 +27,7 @@ import java.util.List;
  */
 
 @Component
+@Transactional
 public class NewsServiceImpl implements NewsService {
     private static final Logger LOG = LogManager.getLogger(NewsServiceImpl.class);
 

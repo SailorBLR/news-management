@@ -2,6 +2,8 @@ package com.epam.hubarevich.dao;
 
 
 import com.epam.hubarevich.dao.exception.DAOException;
+import com.epam.hubarevich.domain.Comment;
+import com.epam.hubarevich.domain.News;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -18,7 +20,11 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:beans-test.xml")
 @Transactional
@@ -29,27 +35,52 @@ public class CommentDaoImplTest {
 
     private final Logger LOG = LogManager.getLogger(CommentDaoImplTest.class);
     private final Long C_ID_1 = 1L;
+    private final Long N_ID_1 = 1L;
+    private final Long N_ID_2 = 2L;
+    private final String C_TEXT = "Something";
+    private final String C_AUTHOR = "Author";
+    private final Comment COMMENT = new Comment(C_ID_1,N_ID_1,C_TEXT,C_AUTHOR, Calendar.getInstance().getTime());
 
     @Autowired
     CommentDAO commentDAO;
+
+    @Autowired
+    NewsDAO newsDAO;
+
     @Test
-    public void testFindCommentsByNewsId() throws Exception {
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindCommentsByNewsId() {
+
+        try {
+            assertTrue(2==commentDAO.findCommentsByNewsId(N_ID_2).size());
+        } catch (DAOException e) {
+            LOG.error(e);
+        }
 
     }
 
     @Test
-    public void testDeleteCommentsByNewsId() throws Exception {
-
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindAll(){
+        try {
+            assertTrue(3==commentDAO.findAll().size());
+        } catch (DAOException e) {
+            LOG.error(e);
+        }
     }
 
     @Test
-    public void testFindAll() throws Exception {
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindDomainById(){
 
-    }
-
-    @Test
-    public void testFindDomainById() throws Exception {
-
+        try {
+            assertEquals(C_TEXT,commentDAO.findDomainById(C_ID_1).getCommentText());
+        } catch (DAOException e) {
+            LOG.error(e);
+        }
     }
 
     @Test
@@ -66,12 +97,18 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void testCreate() throws Exception {
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testCreate(){
 
-    }
+        Long commentId;
 
-    @Test
-    public void testUpdate() throws Exception {
-
+        try {
+            COMMENT.setNews(newsDAO.findDomainById(N_ID_1));
+            commentId = commentDAO.create(COMMENT);
+            assertEquals(COMMENT,commentDAO.findDomainById(commentId));
+        } catch (DAOException e) {
+            LOG.error(e);
+        }
     }
 }

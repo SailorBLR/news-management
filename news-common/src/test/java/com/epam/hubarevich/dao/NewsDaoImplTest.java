@@ -10,6 +10,7 @@ import com.epam.hubarevich.dao.impl.NewsDaoImpl;
 import com.epam.hubarevich.domain.Author;
 import com.epam.hubarevich.domain.News;
 import com.epam.hubarevich.domain.Tag;
+import com.epam.hubarevich.domain.dto.SearchDTO;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -28,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -40,13 +38,13 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:beans-test.xml")
-@Transactional
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DbUnitTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
+@Transactional
 public class NewsDaoImplTest {
     private final Logger LOG = LogManager.getLogger(NewsDaoImplTest.class);
-    private final int NEWS_QUANTITY = 3;
+    private final int NEWS_QUANTITY = 4;
     private final int TAGS_QUANTITY = 3;
     private final Long N_ID_1 = 1L;
     private final Long N_ID_2 = 2L;
@@ -80,15 +78,12 @@ public class NewsDaoImplTest {
     public void testAddNewsAuthor() {
         try {
             newsDao.addNewsAuthor(N_ID_2, A_ID_2);
+            assertEquals(N_ID_2, newsDao.findNewsByAuthor(new Author(A_ID_2, "Author")).iterator().next().getNewsId());
         } catch (DAOException e) {
             LOG.error(e);
         }
     }
 
-    @Test
-    public void testGetMostCommentedNews() throws Exception {
-
-    }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
@@ -98,9 +93,8 @@ public class NewsDaoImplTest {
 
             News news = new News();
             news.setTitle(TITLE_3);
-            newsDao.addTagsNews(newsDao.getNewsByNewsTitle(news).getNewsId(),tagDAO.findAll());
-            System.out.println();
-            assertTrue(TAGS_QUANTITY==tagDAO.getTagsByNewsId(newsDao.getNewsByNewsTitle(news).getNewsId()).size());
+            newsDao.addTagsNews(newsDao.getNewsByNewsTitle(news).getNewsId(), tagDAO.findAll());
+            assertTrue(TAGS_QUANTITY == tagDAO.getTagsByNewsId(newsDao.getNewsByNewsTitle(news).getNewsId()).size());
         } catch (DAOException e) {
             LOG.error(e);
         }
@@ -123,23 +117,73 @@ public class NewsDaoImplTest {
     }
 
     @Test
-    public void testFindNewsByTags() throws Exception {
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindNewsByTags() {
 
+        try {
+            List<Tag> tags = tagDAO.findAll();
+            assertTrue(3 == newsDao.findNewsByTags(tags).size());
+        } catch (DAOException e) {
+            LOG.error(e);
+        }
     }
 
     @Test
-    public void testGetTotalNewsQuantity() throws Exception {
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testGetTotalNewsQuantity() {
 
+        SearchDTO searchDTO = new SearchDTO();
+        try {
+            List<Tag> tags = new ArrayList<>();
+            tags.addAll(tagDAO.getTagsByNewsId(N_ID_2));
+            tags.add(tagDAO.findDomainById(A_ID_2));
+            searchDTO.setTags(tags);
+            searchDTO.setAuthor(AUTHOR);
+            searchDTO.setNextId(2L);
+            assertEquals(3, newsDao.getTotalNewsQuantity(searchDTO));
+        } catch (DAOException e) {
+            LOG.error(e);
+        }
     }
 
     @Test
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
     public void testGetPaginatedListBySearchCriteria() {
 
+        SearchDTO searchDTO = new SearchDTO();
+        try {
+            List<Tag> tags = new ArrayList<>();
+            tags.addAll(tagDAO.getTagsByNewsId(N_ID_2));
+            tags.add(tagDAO.findDomainById(A_ID_2));
+            searchDTO.setTags(tags);
+            searchDTO.setAuthor(AUTHOR);
+            assertEquals(3, newsDao.getPaginatedListBySearchCriteria(searchDTO, 1, 5).size());
+        } catch (DAOException e) {
+            LOG.error(e);
+        }
+
     }
 
     @Test
-    public void testGetPrevNextIds() throws Exception {
-
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testGetPrevNextIds() {
+        SearchDTO searchDTO = new SearchDTO();
+        try {
+            List<Tag> tags = new ArrayList<>();
+            tags.addAll(tagDAO.getTagsByNewsId(N_ID_2));
+            tags.add(tagDAO.findDomainById(A_ID_2));
+            searchDTO.setTags(tags);
+            searchDTO.setAuthor(AUTHOR);
+            newsDao.getPrevNextIds(searchDTO, N_ID_1);
+            assertTrue(N_ID_2.equals(searchDTO.getPrevId()));
+            assertTrue(N_ID_3.equals(searchDTO.getNextId()));
+        } catch (DAOException e) {
+            LOG.error(e);
+        }
     }
 
     @Test
@@ -148,8 +192,11 @@ public class NewsDaoImplTest {
     public void testGetNewsByNewsTitle() {
         News news = new News();
         news.setTitle(TITLE_1);
+        News news_null = new News();
+        news_null.setTitle("T");
         try {
             assertEquals(news.getTitle(), newsDao.getNewsByNewsTitle(news).getTitle());
+            assertEquals(null,newsDao.getNewsByNewsTitle(news_null));
         } catch (DAOException e) {
             LOG.error(e);
         }

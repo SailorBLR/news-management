@@ -2,10 +2,10 @@ package com.epam.hubarevich.dao.impl;
 
 import com.epam.hubarevich.dao.TagDAO;
 import com.epam.hubarevich.dao.exception.DAOException;
-import com.epam.hubarevich.domain.Author;
 import com.epam.hubarevich.domain.Tag;
-import com.epam.hubarevich.utils.DeleteByIDUtil;
+import com.epam.hubarevich.dao.util.DeleteByIDUtil;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -40,11 +40,13 @@ public class TagDaoImpl implements TagDAO {
     }
 
     @Override
+    @Deprecated
     public void unwireTagsNewsByNews(Long newsId) throws DAOException {
 
     }
 
     @Override
+    @Deprecated
     public void unwireTagsNewsByTags(Long tagId) throws DAOException {
 
     }
@@ -66,10 +68,14 @@ public class TagDaoImpl implements TagDAO {
 
     @Override
     public void delete(Long id) throws DAOException {
-        DeleteByIDUtil.deleteById(Tag.class,id,sessionFactory.getCurrentSession());
+        try {
+            DeleteByIDUtil.deleteById(Tag.class, id, sessionFactory.getCurrentSession());
+        } catch (HibernateException e) {
+            throw new DAOException(e);
+        }
     }
 
-    @Transactional
+
     @Override
     public Long create(Tag domain) throws DAOException {
         return (Long) sessionFactory.getCurrentSession().save(domain);

@@ -2,22 +2,26 @@ package com.epam.hubarevich.dao.impl;
 
 import com.epam.hubarevich.dao.CommentDAO;
 import com.epam.hubarevich.dao.exception.DAOException;
-import com.epam.hubarevich.domain.Author;
 import com.epam.hubarevich.domain.Comment;
-import com.epam.hubarevich.utils.DeleteByIDUtil;
+import com.epam.hubarevich.dao.util.DeleteByIDUtil;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
-
-public class CommentDaoImpl implements CommentDAO{
+public class CommentDaoImpl implements CommentDAO {
 
     private SessionFactory sessionFactory;
 
     private final String C_ID = "commentId";
+    private final String N_ID = "newsId";
+    private final String HQL_COMMENT_BY_NEWS_ID = "SELECT C FROM Comment C WHERE C.newsId=:newsId";
+    private final String HQL_ALL_COMMENTS = "SELECT C FROM Comment C";
     private final String UNCHECKED = "unchecked";
 
 
@@ -26,43 +30,76 @@ public class CommentDaoImpl implements CommentDAO{
     }
 
     @Override
+    @SuppressWarnings(UNCHECKED)
     public List<Comment> findCommentsByNewsId(Long newsId) throws DAOException {
-        return null;
+        Query query;
+        try {
+            query = sessionFactory.getCurrentSession().createQuery(HQL_COMMENT_BY_NEWS_ID);
+            query.setLong(N_ID, newsId);
+        } catch (HibernateException e) {
+            throw new DAOException(e);
+        }
+        return query.list();
     }
 
     @Override
+    @Deprecated
     public void deleteCommentsByNewsId(Long newsId) throws DAOException {
 
     }
 
     @Override
+    @SuppressWarnings(UNCHECKED)
     public List<Comment> findAll() throws DAOException {
-        return null;
+
+        Query query;
+        try {
+            query = sessionFactory.getCurrentSession().createQuery(HQL_ALL_COMMENTS);
+        } catch (HibernateException e) {
+            throw new DAOException(e);
+        }
+        return query.list();
     }
 
     @Override
     @SuppressWarnings(UNCHECKED)
     public Comment findDomainById(Long id) throws DAOException {
-        Criteria cr = sessionFactory.getCurrentSession().createCriteria(Comment.class);
-        cr.add(Restrictions.eq(C_ID, id));
-        List<Comment> list = cr.list();
+        List<Comment> list;
+        try {
+            Criteria cr = sessionFactory.getCurrentSession().createCriteria(Comment.class);
+            cr.add(Restrictions.eq(C_ID, id));
+            list = cr.list();
+        } catch (HibernateException e) {
+            throw new DAOException(e);
+        }
         return list.size() == 0 ? null : list.get(0);
     }
 
     @Override
-    public void delete(Long id) {
-
-        DeleteByIDUtil.deleteById(Comment.class,id,sessionFactory.getCurrentSession());
-
+    public void delete(Long id) throws DAOException{
+        try {
+            DeleteByIDUtil.deleteById(Comment.class, id, sessionFactory.getCurrentSession());
+        } catch (HibernateException e) {
+            throw new DAOException(e);
+        }
     }
 
     @Override
+
     public Long create(Comment domain) throws DAOException {
-        return null;
+        Long resultId;
+        try {
+            resultId = (Long) sessionFactory.getCurrentSession().save(domain);
+        } catch (HibernateException e){
+            throw new DAOException(e);
+        }
+        return resultId;
     }
 
     @Override
+    @Deprecated
     public void update(Comment domain) throws DAOException {
+
 
     }
 }

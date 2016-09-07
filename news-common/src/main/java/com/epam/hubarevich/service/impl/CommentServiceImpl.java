@@ -9,11 +9,13 @@ import com.epam.hubarevich.service.exception.LogicException;
 import com.epam.hubarevich.utils.CommentCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Anton_Hubarevich on 6/27/2016.
  */
 @Component
+@Transactional
 public class CommentServiceImpl implements CommentService {
 
     @Autowired
@@ -25,8 +27,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long addComment(Comment comment) throws LogicException {
         Long commentId = 0L;
+
         if (CommentCheckUtil.checkComment(comment)) {
             try {
+                comment.setNews(newsDAO.findDomainById(comment.getNewsId()));
                 commentId=commentDAO.create(comment);
             } catch (DAOException e) {
                 throw new LogicException(e);
@@ -58,6 +62,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Deprecated
     public void deleteAllCommentsFromNews(Long newsId) throws LogicException {
 
         try {

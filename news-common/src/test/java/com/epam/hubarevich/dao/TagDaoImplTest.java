@@ -55,8 +55,7 @@ public class TagDaoImplTest {
         List<Tag> tags = new ArrayList<>();
         try {
             tags.add(tagDAO.findDomainById(TAG_ID_1));
-            tags.add(tagDAO.findDomainById(TAG_ID_2));
-            assertTrue(tagDAO.getTagsByNewsId(NEWS_ID).containsAll(tags));
+            assertTrue(tags.containsAll(tagDAO.getTagsByNewsId(NEWS_ID)));
         } catch (DAOException e) {
             LOG.error(e);
         }

@@ -56,7 +56,7 @@ public class TagController {
      * @param redirectAttributes redirect data (flash message)
      * @return String redirect address
      */
-    @RequestMapping(value = "/addTag", method = RequestMethod.GET)
+    @RequestMapping(value = "/addTag", method = RequestMethod.POST)
     public ModelAndView createNewTag(@Validated @ModelAttribute("tag") Tag tag,
                                      BindingResult bindingResult,
                                      final RedirectAttributes redirectAttributes) throws InternalServerException {
@@ -74,6 +74,7 @@ public class TagController {
                 throw new InternalServerException(e);
             }
         }
+
         return modelAndView;
     }
 
@@ -92,6 +93,7 @@ public class TagController {
         } catch (LogicException e) {
             throw new InternalServerException(e);
         }
+        modelAndView.addObject("tag",new Tag());
         formModel(modelAndView);
         return modelAndView;
     }
@@ -104,7 +106,7 @@ public class TagController {
      * @param redirectAttributes flash messages
      * @return String redirect to address
      */
-    @RequestMapping(value = "/updateTag", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateTag", method = RequestMethod.POST)
     public ModelAndView updateTag(@Validated @ModelAttribute("tag") Tag tag,
                                   BindingResult bindingResult,
                                   final RedirectAttributes redirectAttributes) throws InternalServerException {
@@ -128,7 +130,7 @@ public class TagController {
     }
 
     private void formModel(ModelAndView model) throws InternalServerException {
-        model.setViewName("allTag");
+        model.setViewName("allTags");
         List<Tag> tags;
         try {
             tags = tagService.getListOfTags();

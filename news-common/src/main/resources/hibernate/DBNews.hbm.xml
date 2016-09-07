@@ -41,7 +41,7 @@
             <key>
                 <column name="NEWS_ID" not-null="true" />
             </key>
-            <one-to-many class="com.epam.hubarevich.domain.Comment" />
+            <one-to-many class="com.epam.hubarevich.domain.Comment"/>
         </set>
     </class>
 </hibernate-mapping>
