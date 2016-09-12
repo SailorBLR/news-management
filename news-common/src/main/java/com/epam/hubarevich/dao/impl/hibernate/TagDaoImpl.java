@@ -1,4 +1,4 @@
-package com.epam.hubarevich.dao.impl;
+package com.epam.hubarevich.dao.impl.hibernate;
 
 import com.epam.hubarevich.dao.TagDAO;
 import com.epam.hubarevich.dao.exception.DAOException;
@@ -9,11 +9,12 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
+@Profile("hibernate")
 public class TagDaoImpl implements TagDAO {
 
     private SessionFactory sessionFactory;

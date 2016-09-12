@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,11 +28,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:beans-test.xml")
+@ContextConfiguration({
+        "classpath:beans-test-hibernate.xml",
+        "classpath:beans-test-eclipselink.xml"})
 @Transactional
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DbUnitTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
+
+@ActiveProfiles("elink")
 public class TagDaoImplTest {
 
     private final Logger LOG = LogManager.getLogger(TagDaoImplTest.class);
@@ -51,40 +57,31 @@ public class TagDaoImplTest {
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testGetTagsByNewsId() {
+    public void testGetTagsByNewsId() throws DAOException {
         List<Tag> tags = new ArrayList<>();
-        try {
-            tags.add(tagDAO.findDomainById(TAG_ID_1));
-            assertTrue(tags.containsAll(tagDAO.getTagsByNewsId(NEWS_ID)));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+        tags.add(tagDAO.findDomainById(TAG_ID_1));
+        assertTrue(tags.containsAll(tagDAO.getTagsByNewsId(NEWS_ID)));
+
 
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testFindAll() {
-        try {
-            assertEquals(TAGS_SIZE, tagDAO.findAll().size());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    public void testFindAll() throws DAOException {
+        assertEquals(TAGS_SIZE, tagDAO.findAll().size());
+
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testFindDomainById() {
-        try {
-            assertEquals(TAG_ID_1, tagDAO.findDomainById(TAG_ID_1).getTagId());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    public void testFindDomainById() throws DAOException {
+        assertEquals(TAG_ID_1, tagDAO.findDomainById(TAG_ID_1).getTagId());
+
     }
 
-    @Test
+   /* @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
     public void testDelete() {
@@ -95,29 +92,21 @@ public class TagDaoImplTest {
         } catch (DAOException e) {
             LOG.error(e);
         }
-    }
+    }*/
 
     @Test
-    public void testCreate() {
-        try {
-            TAG.setTagId(tagDAO.create(TAG));
-            assertEquals(TAG,tagDAO.findDomainById(TAG.getTagId()));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
-
+    public void testCreate() throws DAOException {
+        TAG.setTagId(tagDAO.create(TAG));
+        assertEquals(TAG, tagDAO.findDomainById(TAG.getTagId()));
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testUpdate(){
-        Tag tag = new Tag(TAG_ID_1,NEW_TAG_NAME);
-        try {
-            tagDAO.update(tag);
-            assertEquals(tag.toString().trim(),tagDAO.findDomainById(TAG_ID_1).toString().trim());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    public void testUpdate() throws DAOException {
+
+        Tag tag = new Tag(TAG_ID_1, NEW_TAG_NAME);
+        tagDAO.update(tag);
+        assertEquals(tag.toString().trim(), tagDAO.findDomainById(TAG_ID_1).toString().trim());
     }
 }

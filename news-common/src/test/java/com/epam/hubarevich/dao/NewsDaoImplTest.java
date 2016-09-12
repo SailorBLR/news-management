@@ -5,8 +5,6 @@ package com.epam.hubarevich.dao;
  */
 
 import com.epam.hubarevich.dao.exception.DAOException;
-import com.epam.hubarevich.dao.impl.AuthorDaoImpl;
-import com.epam.hubarevich.dao.impl.NewsDaoImpl;
 import com.epam.hubarevich.domain.Author;
 import com.epam.hubarevich.domain.News;
 import com.epam.hubarevich.domain.Tag;
@@ -20,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,19 +36,22 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:beans-test.xml")
+@ContextConfiguration({
+        "classpath:beans-test-hibernate.xml",
+        "classpath:beans-test-eclipselink.xml"})
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DbUnitTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
+@ActiveProfiles("elink")
 @Transactional
 public class NewsDaoImplTest {
     private final Logger LOG = LogManager.getLogger(NewsDaoImplTest.class);
     private final int NEWS_QUANTITY = 4;
     private final int TAGS_QUANTITY = 3;
-    private final Long N_ID_1 = 1L;
-    private final Long N_ID_2 = 2L;
-    private final Long N_ID_3 = 3L;
-    private final Long A_ID_2 = 2L;
+    private final Long ID_1 = 1L;
+    private final Long ID_2 = 2L;
+    private final Long ID_3 = 3L;
+    private final Long ID_4 = 4L;
     private final String NAME_1 = "Ivan Ivanov";
     private final String TITLE_1 = "Test";
     private final String SHORT_1 = "Short";
@@ -57,7 +59,6 @@ public class NewsDaoImplTest {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private final String CREATION_TO_PARSE = "1999-05-06";
     private final String TITLE_3 = "Test3";
-    private final Long ID_1 = 1L;
     private final Author AUTHOR = new Author(ID_1, NAME_1);
 
 
@@ -75,131 +76,102 @@ public class NewsDaoImplTest {
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testAddNewsAuthor() {
-        try {
-            newsDao.addNewsAuthor(N_ID_2, A_ID_2);
-            assertEquals(N_ID_2, newsDao.findNewsByAuthor(new Author(A_ID_2, "Author")).iterator().next().getNewsId());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    public void testAddNewsAuthor() throws DAOException {
+        newsDao.addNewsAuthor(ID_2, ID_2);
+        assertEquals(ID_2, newsDao.findNewsByAuthor(new Author(ID_2, "Author")).iterator().next().getNewsId());
     }
 
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testAddTagsNews() {
-        try {
+    public void testAddTagsNews() throws DAOException {
 
-            News news = new News();
-            news.setTitle(TITLE_3);
-            newsDao.addTagsNews(newsDao.getNewsByNewsTitle(news).getNewsId(), tagDAO.findAll());
-            assertTrue(TAGS_QUANTITY == tagDAO.getTagsByNewsId(newsDao.getNewsByNewsTitle(news).getNewsId()).size());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
-    }
-
-    @Test
-    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
-    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testFindNewsByAuthor() {
-
-        try {
-            List<News> news = new ArrayList<>();
-            news.add(newsDao.findDomainById(N_ID_1));
-            news.add(newsDao.findDomainById(N_ID_3));
-            assertTrue(newsDao.findNewsByAuthor(AUTHOR).containsAll(news));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+        News news = new News();
+        news.setTitle(TITLE_3);
+        newsDao.addTagsNews(newsDao.getNewsByNewsTitle(news).getNewsId(), tagDAO.findAll());
+        assertTrue(TAGS_QUANTITY == tagDAO.getTagsByNewsId(newsDao.getNewsByNewsTitle(news).getNewsId()).size());
 
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testFindNewsByTags() {
+    public void testFindNewsByAuthor() throws DAOException {
 
-        try {
-            List<Tag> tags = tagDAO.findAll();
-            assertTrue(3 == newsDao.findNewsByTags(tags).size());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+        List<News> news = new ArrayList<>();
+        news.add(newsDao.findDomainById(ID_1));
+        news.add(newsDao.findDomainById(ID_3));
+        assertTrue(newsDao.findNewsByAuthor(AUTHOR).containsAll(news));
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testGetTotalNewsQuantity() {
+    public void testFindNewsByTags() throws DAOException {
+
+        List<Tag> tags = tagDAO.findAll();
+        assertTrue(4 == newsDao.findNewsByTags(tags).size());
+    }
+
+    @Test
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testGetTotalNewsQuantity() throws DAOException {
 
         SearchDTO searchDTO = new SearchDTO();
-        try {
-            List<Tag> tags = new ArrayList<>();
-            tags.addAll(tagDAO.getTagsByNewsId(N_ID_2));
-            tags.add(tagDAO.findDomainById(A_ID_2));
-            searchDTO.setTags(tags);
-            searchDTO.setAuthor(AUTHOR);
-            searchDTO.setNextId(2L);
-            assertEquals(3, newsDao.getTotalNewsQuantity(searchDTO));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+        List<Tag> tags = new ArrayList<>();
+        tags.addAll(tagDAO.getTagsByNewsId(ID_2));
+        tags.add(tagDAO.findDomainById(ID_2));
+        searchDTO.setTags(tags);
+        searchDTO.setAuthor(AUTHOR);
+        searchDTO.setNextId(2L);
+        assertEquals(4, newsDao.getTotalNewsQuantity(searchDTO));
+
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testGetPaginatedListBySearchCriteria() {
+    public void testGetPaginatedListBySearchCriteria() throws DAOException {
 
         SearchDTO searchDTO = new SearchDTO();
-        try {
-            List<Tag> tags = new ArrayList<>();
-            tags.addAll(tagDAO.getTagsByNewsId(N_ID_2));
-            tags.add(tagDAO.findDomainById(A_ID_2));
-            searchDTO.setTags(tags);
-            searchDTO.setAuthor(AUTHOR);
-            assertEquals(3, newsDao.getPaginatedListBySearchCriteria(searchDTO, 1, 5).size());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
 
+        List<Tag> tags = new ArrayList<>();
+        tags.add(tagDAO.findDomainById(ID_3));
+        searchDTO.setTags(tags);
+        searchDTO.setAuthor(AUTHOR);
+        assertEquals(3, newsDao.getPaginatedListBySearchCriteria(searchDTO, 1, 5).size());
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testGetPrevNextIds() {
+    public void testGetPrevNextIds() throws DAOException {
         SearchDTO searchDTO = new SearchDTO();
-        try {
-            List<Tag> tags = new ArrayList<>();
-            tags.addAll(tagDAO.getTagsByNewsId(N_ID_2));
-            tags.add(tagDAO.findDomainById(A_ID_2));
-            searchDTO.setTags(tags);
-            searchDTO.setAuthor(AUTHOR);
-            newsDao.getPrevNextIds(searchDTO, N_ID_1);
-            assertTrue(N_ID_2.equals(searchDTO.getPrevId()));
-            assertTrue(N_ID_3.equals(searchDTO.getNextId()));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+        List<Tag> tags = new ArrayList<>();
+        tags.addAll(tagDAO.getTagsByNewsId(ID_2));
+        tags.add(tagDAO.findDomainById(ID_2));
+        searchDTO.setTags(tags);
+        searchDTO.setAuthor(AUTHOR);
+        System.out.println(newsDao.getPaginatedListBySearchCriteria(searchDTO, 1, 5));
+        newsDao.getPrevNextIds(searchDTO, ID_1);
+
+        assertTrue(ID_3.equals(searchDTO.getPrevId()));
+        assertTrue(ID_4.equals(searchDTO.getNextId()));
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testGetNewsByNewsTitle() {
+    public void testGetNewsByNewsTitle() throws DAOException {
         News news = new News();
         news.setTitle(TITLE_1);
         News news_null = new News();
         news_null.setTitle("T");
-        try {
-            assertEquals(news.getTitle(), newsDao.getNewsByNewsTitle(news).getTitle());
-            assertEquals(null,newsDao.getNewsByNewsTitle(news_null));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+
+        assertEquals(news.getTitle(), newsDao.getNewsByNewsTitle(news).getTitle());
+        assertEquals(null, newsDao.getNewsByNewsTitle(news_null));
 
 
     }
@@ -207,70 +179,48 @@ public class NewsDaoImplTest {
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testFindAll() {
-        try {
-            List<News> news = newsDao.findAll();
-            assertTrue(NEWS_QUANTITY == news.size());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    public void testFindAll() throws DAOException {
 
+        List<News> news = newsDao.findAll();
+        assertTrue(NEWS_QUANTITY == news.size());
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testFindDomainById() {
-        try {
-            assertEquals(newsDao.findDomainById(N_ID_1).getTitle(), TITLE_1);
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    public void testFindDomainById() throws DAOException {
+
+        assertEquals(newsDao.findDomainById(ID_1).getTitle(), TITLE_1);
     }
 
-    @Test
+   /* @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testDelete() {
-        try {
-            newsDao.delete(N_ID_1);
-            assertEquals(null, newsDao.findDomainById(N_ID_1));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
-    }
+    public void testDelete() throws DAOException {
+
+        newsDao.delete(N_ID_1);
+        assertEquals(null, newsDao.findDomainById(N_ID_1));
+    }*/
 
     @Test
-    public void testCreate() {
+    public void testCreate() throws ParseException, DAOException {
 
-        try {
-            News news = new News(N_ID_1, TITLE_1, SHORT_1, FULL_1, sdf.parse(CREATION_TO_PARSE), sdf.parse(CREATION_TO_PARSE));
-            news.setNewsId(newsDao.create(news));
-            assertEquals(news, newsDao.findDomainById(news.getNewsId()));
-        } catch (ParseException e) {
-            LOG.error(e);
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+        News news = new News(ID_1, TITLE_1, SHORT_1, FULL_1, sdf.parse(CREATION_TO_PARSE), sdf.parse(CREATION_TO_PARSE));
+        news.setNewsId(newsDao.create(news));
+        assertEquals(news, newsDao.findDomainById(news.getNewsId()));
 
     }
 
     @Test
-    public void testUpdate() throws Exception {
-        try {
-            News news = new News(N_ID_1, TITLE_1, SHORT_1, FULL_1, sdf.parse(CREATION_TO_PARSE), sdf.parse(CREATION_TO_PARSE));
-            news.setNewsId(newsDao.create(news));
+    public void testUpdate() throws DAOException, ParseException {
+        News news = new News(ID_1, TITLE_1, SHORT_1, FULL_1, sdf.parse(CREATION_TO_PARSE), sdf.parse(CREATION_TO_PARSE));
+        news.setNewsId(newsDao.create(news));
 
-            news.setTitle(TITLE_3);
-            news.setNewsModificationDate(Calendar.getInstance().getTime());
-            newsDao.update(news);
-            assertEquals(news.getTitle(), newsDao.findDomainById(news.getNewsId()).getTitle());
-            assertTrue(newsDao.findDomainById(news.getNewsId()).getNewsCreationDate().getTime() <
-                    newsDao.findDomainById(news.getNewsId()).getNewsModificationDate().getTime());
-        } catch (ParseException e) {
-            LOG.error(e);
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+        news.setTitle(TITLE_3);
+        news.setNewsModificationDate(Calendar.getInstance().getTime());
+        newsDao.update(news);
+        assertEquals(news.getTitle(), newsDao.findDomainById(news.getNewsId()).getTitle());
+        assertTrue(newsDao.findDomainById(news.getNewsId()).getNewsCreationDate().getTime() <
+                newsDao.findDomainById(news.getNewsId()).getNewsModificationDate().getTime());
     }
 }

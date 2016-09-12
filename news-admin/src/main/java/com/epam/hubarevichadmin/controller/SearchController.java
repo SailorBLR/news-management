@@ -26,6 +26,21 @@ import java.util.List;
 @Controller
 @SessionAttributes("searchCriteria")
 public class SearchController {
+
+    private final String DEFAULT_VALUE_0 = "0";
+    private final String DEFAULT_VALUE_1 = "1";
+    private final String COMMA = ",";
+    private final String URL_SEARCH = "/search**";
+    private final String ALL = "all";
+    private final String AUTHORSNAME = "authorsname";
+    private final String SEARCH_CRITERIA = "searchCriteria";
+    private final String NEXT_PAGE = "nextPage";
+    private final String TAGSES = "tagses";
+    private final String PAGES = "pages";
+    private final String AUTHORS = "authors";
+    private final String TAGS = "tags";
+    private final String LIST_NEWS = "listNews";
+
     @Autowired
     NewsService newsService;
     @Autowired
@@ -33,23 +48,23 @@ public class SearchController {
     @Autowired
     AuthorService authorService;
 
-    @RequestMapping(value = "/search**", method = RequestMethod.GET)
-    public ModelAndView getListOfNews (@RequestParam(value = "nextPage", defaultValue = "1") String nextPage,
-                                       @RequestParam(value = "authorsname",defaultValue = "0") String authorsname,
-                                       @RequestParam(value = "tagses", defaultValue = "0") String tagses,
-                                       @ModelAttribute("searchCriteria") SearchDTO searchDto) throws InternalServerException {
+    @RequestMapping(value = URL_SEARCH, method = RequestMethod.GET)
+    public ModelAndView getListOfNews (@RequestParam(value = NEXT_PAGE, defaultValue = DEFAULT_VALUE_1) String nextPage,
+                                       @RequestParam(value = AUTHORSNAME,defaultValue = DEFAULT_VALUE_0) String authorsname,
+                                       @RequestParam(value = TAGSES, defaultValue = DEFAULT_VALUE_0) String tagses,
+                                       @ModelAttribute(SEARCH_CRITERIA) SearchDTO searchDto) throws InternalServerException {
         int page = 1;
-        if (!nextPage.equals("1")) {
+        if (!nextPage.equals(DEFAULT_VALUE_1)) {
             page = Integer.valueOf(nextPage);
         }
 
-        if (authorsname!=null&&!authorsname.equals("0")) {
+        if (authorsname!=null&&!authorsname.equals(DEFAULT_VALUE_0)) {
             Author author = new Author();
             author.setAuthorId(Long.valueOf(authorsname));
             searchDto.setAuthor(author);
         }
-        if (tagses != null&&!tagses.equals("0")) {
-            String str[] = tagses.split(",");
+        if (tagses != null&&!tagses.equals(DEFAULT_VALUE_0)) {
+            String str[] = tagses.split(COMMA);
             List<Tag> tagList = new LinkedList<>();
             for (String st : str) {
                 Tag tag = new Tag();
@@ -59,7 +74,7 @@ public class SearchController {
             searchDto.setTags(tagList);
         }
 
-        ModelAndView model = new ModelAndView("all");
+        ModelAndView model = new ModelAndView(ALL);
 
         try {
             List<NewsDTO> newsDTOs = newsService.getNewsBySearchCriteria(searchDto,page);
@@ -67,10 +82,10 @@ public class SearchController {
             List<Author> authors = authorService.getListOfAuthors();
             int [] pages = TotalNewsQuantityResolverUtil
                     .getTotalPagesQuantity(newsService.getSearchNewsQuantity(searchDto));
-            model.addObject("pages",pages);
-            model.addObject("listNews",newsDTOs);
-            model.addObject("authors",authors);
-            model.addObject("tags",tags);
+            model.addObject(PAGES,pages);
+            model.addObject(LIST_NEWS,newsDTOs);
+            model.addObject(AUTHORS,authors);
+            model.addObject(TAGS,tags);
 
         } catch (LogicException e) {
             throw new InternalServerException(e);

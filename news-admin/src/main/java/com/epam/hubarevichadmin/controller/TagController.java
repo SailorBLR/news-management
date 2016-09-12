@@ -24,12 +24,25 @@ import java.util.List;
 @Controller
 @Component
 public class TagController {
+    private final Integer FIRST_PAGE = 1;
+    private final String URL_ALL_TAGS = "/allTags";
+    private final String URL_ADD_TAG = "/addTag";
+    private final String URL_DELETE_TAG = "/deleteTag";
+    private final String URL_UPDATE_TAG = "/updateTag";
+    private final String TAG = "tag";
+    private final String TAG_ID = "tagId";
+    private final String ALL_TAGS = "allTags";
+    private final String TAGS = "tags";
+    private final String BIND_CLASS = "org.springframework.validation.BindingResult.tag";
+
+
+
     @Autowired
     TagService tagService;
     @Autowired
     TagValidatorUtil tagValidator;
 
-    @InitBinder("tag")
+    @InitBinder(TAG)
     private void initCmtBinder(WebDataBinder binder) {
         binder.setValidator(tagValidator);
     }
@@ -40,8 +53,8 @@ public class TagController {
      *
      * @return ModelAndView object
      */
-    @RequestMapping(value = "/allTags", method = RequestMethod.GET)
-    public ModelAndView showAll(@ModelAttribute("tag") Tag tag) throws InternalServerException {
+    @RequestMapping(value = URL_ALL_TAGS, method = RequestMethod.GET)
+    public ModelAndView showAll(@ModelAttribute(TAG) Tag tag) throws InternalServerException {
 
         ModelAndView model = new ModelAndView();
         formModel(model);
@@ -56,19 +69,19 @@ public class TagController {
      * @param redirectAttributes redirect data (flash message)
      * @return String redirect address
      */
-    @RequestMapping(value = "/addTag", method = RequestMethod.POST)
-    public ModelAndView createNewTag(@Validated @ModelAttribute("tag") Tag tag,
+    @RequestMapping(value = URL_ADD_TAG, method = RequestMethod.POST)
+    public ModelAndView createNewTag(@Validated @ModelAttribute(TAG) Tag tag,
                                      BindingResult bindingResult,
                                      final RedirectAttributes redirectAttributes) throws InternalServerException {
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.tag", bindingResult);
+            redirectAttributes.addFlashAttribute(BIND_CLASS, bindingResult);
             formModel(modelAndView);
             return modelAndView;
         } else {
             try {
                 tagService.addNewTag(tag);
-                modelAndView.addObject("tag", new Tag());
+                modelAndView.addObject(TAG, new Tag());
                 formModel(modelAndView);
             } catch (LogicException e) {
                 throw new InternalServerException(e);
@@ -84,8 +97,8 @@ public class TagController {
      * @param tagId Long tagId
      * @return String redirect address
      */
-    @RequestMapping(value = "/deleteTag", method = RequestMethod.GET)
-    public ModelAndView deleteTag(@RequestParam(value = "tagId") Long tagId) throws InternalServerException {
+    @RequestMapping(value = URL_DELETE_TAG, method = RequestMethod.GET)
+    public ModelAndView deleteTag(@RequestParam(value = TAG_ID) Long tagId) throws InternalServerException {
 
         ModelAndView modelAndView = new ModelAndView();
         try {
@@ -93,7 +106,7 @@ public class TagController {
         } catch (LogicException e) {
             throw new InternalServerException(e);
         }
-        modelAndView.addObject("tag",new Tag());
+        modelAndView.addObject(TAG,new Tag());
         formModel(modelAndView);
         return modelAndView;
     }
@@ -106,21 +119,21 @@ public class TagController {
      * @param redirectAttributes flash messages
      * @return String redirect to address
      */
-    @RequestMapping(value = "/updateTag", method = RequestMethod.POST)
-    public ModelAndView updateTag(@Validated @ModelAttribute("tag") Tag tag,
+    @RequestMapping(value = URL_UPDATE_TAG, method = RequestMethod.POST)
+    public ModelAndView updateTag(@Validated @ModelAttribute(TAG) Tag tag,
                                   BindingResult bindingResult,
                                   final RedirectAttributes redirectAttributes) throws InternalServerException {
 
         ModelAndView modelAndView = new ModelAndView();
 
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.tag", bindingResult);
+            redirectAttributes.addFlashAttribute(BIND_CLASS, bindingResult);
             formModel(modelAndView);
             return modelAndView;
         } else {
             try {
                 tagService.updateTag(tag);
-                modelAndView.addObject("tag", new Tag());
+                modelAndView.addObject(TAG, new Tag());
                 formModel(modelAndView);
             } catch (LogicException e) {
                 throw new InternalServerException(e);
@@ -130,11 +143,11 @@ public class TagController {
     }
 
     private void formModel(ModelAndView model) throws InternalServerException {
-        model.setViewName("allTags");
+        model.setViewName(ALL_TAGS);
         List<Tag> tags;
         try {
             tags = tagService.getListOfTags();
-            model.addObject("tags", tags);
+            model.addObject(TAGS, tags);
         } catch (LogicException e) {
             throw new InternalServerException(e);
         }

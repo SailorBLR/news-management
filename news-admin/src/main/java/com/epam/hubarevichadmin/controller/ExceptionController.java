@@ -6,27 +6,27 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-/**
- * Created by Anton_Hubarevich on 8/10/2016.
- */
+
 @ControllerAdvice
 public class ExceptionController {
-
+    private final String MESSAGE = "message";
+    private final String CODE_500 = "500";
+    private final String CODE_403 = "403";
 
 
     @ExceptionHandler(InternalServerException.class)
     public ModelAndView handleServiceException(InternalServerException exc){
 
-        ModelAndView model = new ModelAndView("500");
-        model.addObject("message", exc);
+        ModelAndView model = new ModelAndView(CODE_500);
+        model.addObject(MESSAGE, exc);
         return model;
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ModelAndView handlePermissionException(AccessDeniedException exc){
 
-        ModelAndView model = new ModelAndView("403");
-        model.addObject("message", exc);
+        ModelAndView model = new ModelAndView(CODE_403);
+        model.addObject(MESSAGE, exc);
         return model;
     }
 

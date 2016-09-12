@@ -13,7 +13,7 @@
             <column name="TAG_NAME" length="20" not-null="true" />
         </property>
         <set name="news" table="NEWS_TAGS"
-             inverse="false" lazy="false" fetch="select">
+             inverse="false" lazy="false" fetch="select" access="property">
             <key column="TAG_ID" />
             <many-to-many column="NEWS_ID" class="com.epam.hubarevich.domain.News"/>
         </set>

@@ -39,7 +39,8 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
-    <import resource="classpath*:beans.xml"/>
+    <import resource="classpath*:hibernate-beans.xml"/>
+    <import resource="classpath*:eclipse-beans.xml"/>
     <bean id="viewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"/>
 
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">

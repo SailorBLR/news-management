@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,11 +27,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:beans-test.xml")
+@ContextConfiguration({
+        "classpath:beans-test-hibernate.xml",
+        "classpath:beans-test-eclipselink.xml"})
 @Transactional
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DbUnitTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
+@ActiveProfiles("elink")
 public class CommentDaoImplTest {
 
     private final Logger LOG = LogManager.getLogger(CommentDaoImplTest.class);
@@ -39,7 +43,8 @@ public class CommentDaoImplTest {
     private final Long N_ID_2 = 2L;
     private final String C_TEXT = "Something";
     private final String C_AUTHOR = "Author";
-    private final Comment COMMENT = new Comment(C_ID_1,N_ID_1,C_TEXT,C_AUTHOR, Calendar.getInstance().getTime());
+    private final Comment COMMENT = new Comment(C_ID_1, N_ID_1, C_TEXT, C_AUTHOR, Calendar.getInstance().getTime());
+    private final News NEWS = new News(1L, "Text", "TEXT", "Text", Calendar.getInstance().getTime(), Calendar.getInstance().getTime());
 
     @Autowired
     CommentDAO commentDAO;
@@ -50,40 +55,30 @@ public class CommentDaoImplTest {
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testFindCommentsByNewsId() {
+    public void testFindCommentsByNewsId() throws DAOException{
 
-        try {
-            assertTrue(2==commentDAO.findCommentsByNewsId(N_ID_2).size());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+            assertTrue(2 == commentDAO.findCommentsByNewsId(N_ID_2).size());
 
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testFindAll(){
-        try {
-            assertTrue(3==commentDAO.findAll().size());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    public void testFindAll() throws DAOException{
+
+            assertTrue(4 == commentDAO.findAll().size());
     }
 
     @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testFindDomainById(){
+    public void testFindDomainById() throws DAOException{
 
-        try {
-            assertEquals(C_TEXT,commentDAO.findDomainById(C_ID_1).getCommentText());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+            assertEquals(C_TEXT, commentDAO.findDomainById(C_ID_1).getCommentText());
+
     }
 
-    @Test
+   /* @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
     public void testDelete() {
@@ -94,21 +89,21 @@ public class CommentDaoImplTest {
         } catch (DAOException e) {
             LOG.error(e);
         }
-    }
+    }*/
 
     @Test
-    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
-    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-    public void testCreate(){
+    public void testCreate() throws DAOException {
 
-        Long commentId;
+        newsDAO.create(NEWS);
 
-        try {
-            COMMENT.setNews(newsDAO.findDomainById(N_ID_1));
-            commentId = commentDAO.create(COMMENT);
-            assertEquals(COMMENT,commentDAO.findDomainById(commentId));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+        COMMENT.setNews(NEWS);
+
+        int size = commentDAO.findAll().size();
+
+        COMMENT.setCommentId(null);
+
+        commentDAO.create(COMMENT);
+
+        assertEquals(size + 1, commentDAO.findAll().size());
     }
 }

@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
@@ -26,7 +27,7 @@ import java.util.List;
  * Created by Anton_Hubarevich on 6/23/2016.
  */
 
-@Component
+@Service
 @Transactional
 public class NewsServiceImpl implements NewsService {
     private static final Logger LOG = LogManager.getLogger(NewsServiceImpl.class);
@@ -130,6 +131,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> getNewsBySearchCriteria(SearchDTO searchDTO, int page) throws LogicException {
+        System.out.println("NEWS BY SEARCH CRITERIA");
         int startIndex = 1;
         int endIndex = 5;
         int news = Integer.valueOf(ConfigurationManager.getProperty("cfg.news"));

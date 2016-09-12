@@ -9,8 +9,8 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd
-       ">
+       http://www.springframework.org/schema/context/spring-context.xsd"
+       profile="hibernate">
 
 
     <context:property-placeholder location="classpath:ojdbc.properties"/>
@@ -52,25 +52,25 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
-    <bean id="authorDao" class="com.epam.hubarevich.dao.impl.AuthorDaoImpl">
+    <bean id="authorDao" class="com.epam.hubarevich.dao.impl.hibernate.AuthorDaoImpl">
         <constructor-arg>
             <ref bean="sessionFactory" />
         </constructor-arg>
     </bean>
 
-    <bean id="newsDao" class="com.epam.hubarevich.dao.impl.NewsDaoImpl">
+    <bean id="newsDao" class="com.epam.hubarevich.dao.impl.hibernate.NewsDaoImpl">
         <constructor-arg>
             <ref bean="sessionFactory" />
         </constructor-arg>
     </bean>
 
-    <bean id="tagDao" class="com.epam.hubarevich.dao.impl.TagDaoImpl">
+    <bean id="tagDao" class="com.epam.hubarevich.dao.impl.hibernate.TagDaoImpl">
         <constructor-arg>
             <ref bean="sessionFactory" />
         </constructor-arg>
     </bean>
 
-    <bean id="commentDao" class="com.epam.hubarevich.dao.impl.CommentDaoImpl">
+    <bean id="commentDao" class="com.epam.hubarevich.dao.impl.hibernate.CommentDaoImpl">
         <constructor-arg>
             <ref bean="sessionFactory" />
         </constructor-arg>

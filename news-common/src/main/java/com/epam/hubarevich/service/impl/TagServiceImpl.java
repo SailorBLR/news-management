@@ -7,6 +7,7 @@ import com.epam.hubarevich.service.TagService;
 import com.epam.hubarevich.service.exception.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  * Service class to operate with Tag entities
  */
 
-@Component
+@Service
 @Transactional
 public class TagServiceImpl implements TagService {
     @Autowired
@@ -42,7 +43,6 @@ public class TagServiceImpl implements TagService {
 
     }
 
-    @Transactional
     @Override
     public void deleteTag(Long tagId) throws LogicException {
         try {
