@@ -25,6 +25,20 @@ import java.util.List;
 @Component
 @SessionAttributes("searchCriteria")
 public class NewsController {
+    private final String FIRST_PAGE = "1";
+    private final String URL_ALL = "/all**";
+    private final String URL_NEWS_MESSAGE = "/newsMessage";
+    private final String NEXT_PAGE = "nextPage";
+    private final String SEARCH_CRITERIA = "searchCriteria";
+    private final String ALL = "all";
+    private final String ID = "id";
+    private final String PAGES = "pages";
+    private final String LIST_NEWS = "listNews";
+    private final String TAGS = "tags";
+    private final String AUTHORS = "authors";
+    private final String NEWS_MESSAGE = "newsMessage";
+    private final String MESSAGE = "message";
+
     @Autowired
     NewsService newsService;
     @Autowired
@@ -33,17 +47,17 @@ public class NewsController {
     AuthorService authorService;
 
 
-    @RequestMapping(value = "/all**", method = RequestMethod.GET)
-    public ModelAndView getListOfNews (@RequestParam(value = "nextPage", defaultValue = "1") String nextPage,
-                                       @ModelAttribute("searchCriteria") SearchDTO searchDto) throws InternalServerException {
+    @RequestMapping(value = URL_ALL, method = RequestMethod.GET)
+    public ModelAndView getListOfNews (@RequestParam(value = NEXT_PAGE, defaultValue = FIRST_PAGE) String nextPage,
+                                       @ModelAttribute(SEARCH_CRITERIA) SearchDTO searchDto) throws InternalServerException {
         searchDto.setNull();
 
         int page = 1;
-        if (!nextPage.equals("1")) {
+        if (!nextPage.equals(FIRST_PAGE)) {
             page = Integer.valueOf(nextPage);
         }
 
-        ModelAndView model = new ModelAndView("all");
+        ModelAndView model = new ModelAndView(ALL);
 
         try {
             List<NewsDTO> newsDTOs = newsService.getNewsBySearchCriteria(searchDto,page);
@@ -51,10 +65,10 @@ public class NewsController {
             List<Author> authors = authorService.getListOfAuthors();
             int [] pages = TotalNewsQuantityResolverUtil
                     .getTotalPagesQuantity(newsService.getSearchNewsQuantity(searchDto));
-            model.addObject("pages",pages);
-            model.addObject("listNews",newsDTOs);
-            model.addObject("authors",authors);
-            model.addObject("tags",tags);
+            model.addObject(PAGES,pages);
+            model.addObject(LIST_NEWS,newsDTOs);
+            model.addObject(AUTHORS,authors);
+            model.addObject(TAGS,tags);
 
         } catch (LogicException e) {
             throw new InternalServerException(e);
@@ -63,15 +77,15 @@ public class NewsController {
     }
 
 
-    @RequestMapping(value = "/newsMessage", method = RequestMethod.GET)
-    public  ModelAndView getSingleNewsMessage (@RequestParam(value = "id") Long newsId,
-                                               @ModelAttribute("searchCriteria") SearchDTO searchDto) throws InternalServerException {
-        ModelAndView model = new ModelAndView("newsMessage");
+    @RequestMapping(value = URL_NEWS_MESSAGE, method = RequestMethod.GET)
+    public  ModelAndView getSingleNewsMessage (@RequestParam(value = ID) Long newsId,
+                                               @ModelAttribute(SEARCH_CRITERIA) SearchDTO searchDto) throws InternalServerException {
+        ModelAndView model = new ModelAndView(NEWS_MESSAGE);
 
         try {
             NewsDTO newsDTO = newsService.getNewsById(newsId);
             newsService.getNextPrevIDs(searchDto,newsId);
-            model.addObject("message",newsDTO);
+            model.addObject(MESSAGE,newsDTO);
 
         } catch (LogicException e) {
             throw new InternalServerException(e);

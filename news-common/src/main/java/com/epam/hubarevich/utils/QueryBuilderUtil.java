@@ -6,34 +6,54 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * Created by Anton_Hubarevich on 7/19/2016.
- */
+
 @Component
 public class QueryBuilderUtil {
 
-    private final String SQL_SEARCH_QUERY_BASE = "select N.news_id,N.title,N.short_text,N.full_text,N.creation_date," +
-            " N.modification_date,COUNT(C.NEWS_ID) AS num_comments from news N ";
-    private final String SQL_QUERY_JOIN_COMMENTS_GROUP = " LEFT JOIN comments C on C.news_id=N.news_id";
-    private final String SQL_ORDER_BY = " group by N.news_id, N.title, N.short_text, N.full_text, N.creation_date, N.modification_date order by num_comments DESC, N.CREATION_DATE DESC";
-    private final String SQL_PAGINATION_START = "SELECT N.*" +
+    private final String SQL_SEARCH_QUERY_BASE =
+            "SELECT N.news_id,N.title,N.short_text,N.full_text,N.creation_date, N.modification_date,COUNT(C.NEWS_ID) AS num_comments " +
+            "FROM news N ";
+    private final String SQL_QUERY_JOIN_COMMENTS_GROUP =
+            " LEFT JOIN comments C " +
+            "ON C.news_id=N.news_id";
+    private final String SQL_ORDER_BY =
+            " GROUP BY N.news_id, N.title, N.short_text, N.full_text, N.creation_date, N.modification_date " +
+            "ORDER BY num_comments DESC, N.CREATION_DATE DESC";
+    private final String SQL_PAGINATION_START =
+            "SELECT N.*" +
             "FROM (SELECT ROWNUM rw, N.* " +
             "FROM (";
-    private final String SQL_SEARCH_QUERY_END = ") N where rownum <=?" +
+    private final String SQL_SEARCH_QUERY_END =
+            ") N where rownum <=?" +
             " ) N" +
             " where N.rw >= ?";
-    private final String SQL_JOIN_AUTHORS = "LEFT JOIN news_authors NA ON NA.news_id = N.news_id";
+    private final String SQL_JOIN_AUTHORS =
+            "LEFT JOIN news_authors NA " +
+            "ON NA.news_id = N.news_id";
     private final String SQL_AND = " OR ";
-    private final String SQL_JOIN_TAGS = " LEFT JOIN news_tags NT on NT.news_id=N.news_id";
-    private final String SQL_ANOTHER_TAG = " OR NT.tag_id=? ";
+    private final String SQL_JOIN_TAGS =
+            " LEFT JOIN news_tags NT " +
+            "ON NT.news_id=N.news_id";
+    private final String SQL_ANOTHER_TAG =
+            " OR NT.tag_id=? ";
     private final String SQL_WHERE = " WHERE ";
     private final String SQL_WHERE_AUTHOR = "NA.author_id=? ";
     private final String SQL_WHERE_TAG = " (NT.tag_id=?";
     private final String SQL_END = ") ";
-    private final String SQL_COUNT = "SELECT COUNT (*) FROM(";
-    private final String SQL_CURRENT_NEWS_ROWNUM = "SELECT N.news_id,rw FROM (SELECT ROWNUM rw, N.* FROM (";
-    private final String SQL_NEXT_PREV_END = ") N) N where rw=? or rw=?";
-    private final String SQL_ROWNUM_BY_ID_END = ") N) N where news_id=?";
+    private final String SQL_COUNT =
+            "SELECT COUNT (*) " +
+            "FROM(";
+    private final String SQL_CURRENT_NEWS_ROWNUM =
+            "SELECT N.news_id,rw " +
+            "FROM (" +
+                    "SELECT ROWNUM rw, N.* " +
+                    "FROM (";
+    private final String SQL_NEXT_PREV_END =
+            ") N) N " +
+            "WHERE rw=? or rw=?";
+    private final String SQL_ROWNUM_BY_ID_END =
+            ") N) N " +
+            "WHERE news_id=?";
 
     /**
      * Builds Search criteria query

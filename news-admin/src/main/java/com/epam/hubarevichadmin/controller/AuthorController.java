@@ -9,7 +9,6 @@ import com.epam.hubarevichadmin.validation.AuthorValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -28,6 +27,15 @@ import java.util.List;
 @Controller
 @Component
 public class AuthorController {
+    private final String AUTHOR = "author";
+    private final String AUTHORS = "authors";
+    private final String URL_ALL_AUTHOR = "/allAuthors";
+    private final String URL_ADD_AUTHOR = "/addAuthor";
+    private final String URL_UPDATE_AUTHOR = "/updateAuthor";
+    private final String ALL_AUTHORS = "allAuthors";
+    private final String BINDING_CLASS = "org.springframework.validation.BindingResult.author";
+
+
     @Autowired
     AuthorService authorService;
     @Autowired
@@ -35,14 +43,14 @@ public class AuthorController {
     @Autowired
     AuthorValidatorUtil authorValidatorUtil;
 
-    @InitBinder("author")
+    @InitBinder(AUTHOR)
     private void initCmtBinder(WebDataBinder binder) {
         binder.setValidator(authorValidatorUtil);
     }
 
 
-    @RequestMapping(value = "/allAuthors", method = RequestMethod.GET)
-    public ModelAndView showAuthorsPage(@ModelAttribute("author") Author author
+    @RequestMapping(value = URL_ALL_AUTHOR, method = RequestMethod.GET)
+    public ModelAndView showAuthorsPage(@ModelAttribute(AUTHOR) Author author
     ) throws InternalServerException {
 
         ModelAndView modelAndView = new ModelAndView();
@@ -51,22 +59,23 @@ public class AuthorController {
 
     }
 
-    @RequestMapping(value = "/addAuthor", method = RequestMethod.POST)
-    public ModelAndView createNewAuthor(@Validated@ModelAttribute("author") Author author,
+    @RequestMapping(value = URL_ADD_AUTHOR, method = RequestMethod.POST)
+    public ModelAndView createNewAuthor(@Validated@ModelAttribute(AUTHOR) Author author,
                                         BindingResult bindingResult,
-                                        final RedirectAttributes redirectAttributes, ModelAndView model) throws InternalServerException {
+                                        final RedirectAttributes redirectAttributes, ModelAndView model)
+                                        throws InternalServerException {
 
         ModelAndView modelAndView = new ModelAndView();
 
         if(bindingResult.hasErrors()){
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.author", bindingResult);
+            redirectAttributes.addFlashAttribute(BINDING_CLASS, bindingResult);
             formModel(modelAndView);
             return modelAndView;
         }
 
         try {
             authorService.createAuthor(author);
-            modelAndView.addObject("author",new Author());
+            modelAndView.addObject(AUTHOR,new Author());
             formModel(modelAndView);
         } catch (LogicException e) {
             throw new InternalServerException(e);
@@ -74,14 +83,14 @@ public class AuthorController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/updateAuthor", method = RequestMethod.POST)
-    public ModelAndView updateAuthor(@Validated@ModelAttribute("author")Author author,
+    @RequestMapping(value = URL_UPDATE_AUTHOR, method = RequestMethod.POST)
+    public ModelAndView updateAuthor(@Validated@ModelAttribute(AUTHOR)Author author,
                                BindingResult bindingResult,
                                final RedirectAttributes redirectAttributes) throws InternalServerException {
 
         ModelAndView modelAndView = new ModelAndView();
         if(bindingResult.hasErrors()){
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.author", bindingResult);
+            redirectAttributes.addFlashAttribute(BINDING_CLASS, bindingResult);
             author.setExpired(null);
             formModel(modelAndView);
             return modelAndView;
@@ -89,8 +98,8 @@ public class AuthorController {
         try {
 
             authorService.updateAuthor(author);
-            redirectAttributes.addFlashAttribute("author",new Author());
-            modelAndView.addObject("author",new Author());
+            redirectAttributes.addFlashAttribute(AUTHOR,new Author());
+            modelAndView.addObject(AUTHOR,new Author());
             formModel(modelAndView);
         } catch (LogicException e) {
             throw new InternalServerException(e);
@@ -101,12 +110,12 @@ public class AuthorController {
 
 
     private void formModel(ModelAndView model) throws InternalServerException {
-        model.setViewName("allAuthor");
+        model.setViewName(ALL_AUTHORS);
 
         List<Author> authors;
         try {
             authors = authorService.getListOfAuthors();
-            model.addObject("authors", authors);
+            model.addObject(AUTHORS, authors);
 
         } catch (LogicException e) {
             throw new InternalServerException(e);

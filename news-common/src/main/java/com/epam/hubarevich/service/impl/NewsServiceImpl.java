@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -25,7 +26,7 @@ import java.util.List;
  * Created by Anton_Hubarevich on 6/23/2016.
  */
 
-@Component
+@Service
 public class NewsServiceImpl implements NewsService {
     private static final Logger LOG = LogManager.getLogger(NewsServiceImpl.class);
 

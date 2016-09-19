@@ -7,8 +7,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +17,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,131 +34,106 @@ import static org.junit.Assert.assertTrue;
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DbUnitTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
-@DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
-@DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
-
 
 public class AuthorDaoImplTest {
-    private static final Logger LOG = LogManager.getLogger(AuthorDaoImplTest.class);
+    private final String NAME_1 = "Ivan Ivanov";
+    private final Long ID_1 = 1L;
+    private final String NAME_2 = "Pavel Pavlov";
+    private final Long ID_2 = 2L;
+    private final String NAME_3 = "Kto-to";
+    private final Long ID_3 = 3L;
+    private final Author AUTHOR = new Author(ID_1, NAME_1);
+    private final SimpleDateFormat SDF = new SimpleDateFormat("YYYY-MM-dd");
+    private final String DATE = "2000-02-15";
 
     @Autowired
     private AuthorDAOImpl authorDAO;
 
     @Test
-    public void testCreate() {
-        try {
-            Author author = new Author();
-            author.setAuthorName("Test");
-            Assert.assertNotEquals(Long.valueOf(1L), authorDAO.create(author));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    @Transactional
+    public void testCreate() throws DAOException {
+        Assert.assertNotEquals(ID_1, authorDAO.create(AUTHOR));
     }
 
     @Test
-    public void testDelete() {
-        try {
-            authorDAO.delete(1L);
-            Assert.assertEquals(authorDAO.findDomainById(1L), null);
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    @Transactional
+    public void testDelete() throws DAOException {
+        authorDAO.create(AUTHOR);
+        authorDAO.delete(ID_1);
+        Assert.assertEquals(null,authorDAO.findDomainById(ID_1));
     }
 
     @Test
-    public void testUpdate() {
-        String date = "2016-06-20 20:15:11";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        try {
-            Author author = new Author(1L,"Ivan Ivanov");
-            author.setExpired(sdf.parse(date));
-            authorDAO.update(author);
-
-            Assert.assertEquals(authorDAO.findDomainById(1L).getExpired().getTime(), author.getExpired().getTime());
-        } catch (DAOException|ParseException e) {
-            LOG.error(e);
-        }
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testUpdate() throws DAOException, ParseException {
+        AUTHOR.setExpired(SDF.parse(DATE));
+        authorDAO.update(AUTHOR);
+        Assert.assertEquals(AUTHOR.getExpired().getTime()
+                ,authorDAO.findDomainById(ID_1).getExpired().getTime());
     }
 
 
     @Test
-    public void testFindDomainById() {
-        try {
-            Author author = new Author();
-            author.setAuthorId(1L);
-            Assert.assertEquals(authorDAO.findDomainById(author.getAuthorId())
-                    .getAuthorId(), author.getAuthorId());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindDomainById() throws DAOException {
+        Assert.assertEquals(AUTHOR.getAuthorId(), authorDAO.findDomainById(ID_1).getAuthorId());
     }
 
     @Test
-    public void testFindAuthorByName() {
-        try {
-            Author author = new Author();
-            author.setAuthorName("Ivan Ivanov");
-            Assert.assertEquals(authorDAO.findAuthorByName(author.getAuthorName()).getAuthorName(),
-                    author.getAuthorName());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindAuthorByName() throws DAOException {
+
+        Assert.assertEquals(NAME_1,
+                authorDAO.findAuthorByName(NAME_1).getAuthorName());
+
     }
 
     @Test
-    public void testFindAuthorByNewsId() {
-        try {
-            Author author = new Author(1L,"Ivan Ivanov");
-            Assert.assertEquals(authorDAO.findAuthorByNewsId(1L).toString().trim(),
-                    author.toString().trim());
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindAuthorByNewsId() throws DAOException {
+
+        Assert.assertEquals(AUTHOR.toString().trim(),
+                authorDAO.findAuthorByNewsId(ID_1).toString().trim());
     }
 
     @Test
-    public void testFindAll() {
-        try {
-            Set<Author> authors = new HashSet<Author>();
-            Author author = new Author(1L,"Ivan Ivanov");
-            author.setExpired((new SimpleDateFormat("yyyy-MM-dd")).parse("2016-08-13"));
-            Author author1 = new Author(2L,"Pavel Pavlov");
-            Author author2 = new Author(3L,"Kto-to");
-            authors.add(author);
-            authors.add(author1);
-            authors.add(author2);
-            assertTrue(authorDAO.findAll().containsAll(authors));
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindAll() throws DAOException, ParseException {
 
-        } catch (DAOException|ParseException e) {
-            LOG.error(e);
-        }
+        Set<Author> authors = new HashSet<>();
+        Author author1 = new Author(ID_2, NAME_2);
+        Author author2 = new Author(ID_3, NAME_3);
+        Author author = authorDAO.findDomainById(ID_1);
+        authors.add(author);
+        authors.add(author1);
+        authors.add(author2);
+        assertTrue(authors.containsAll(authorDAO.findAll()));
     }
 
     @Test
-    public void testUnwireNewsAuthors(){
-        try {
-            authorDAO.unwireNewsAuthors(1L);
-            Assert.assertEquals(authorDAO.findAuthorByNewsId(1L),null);
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testUnwireNewsAuthors() throws DAOException {
+        authorDAO.unwireNewsAuthors(ID_1);
+        Assert.assertEquals(null, authorDAO.findAuthorByNewsId(ID_1));
     }
 
 
     @Test
-    public void testGetAvailableAuthors(){
-        try {
-            Set<Author> authors = new HashSet<Author>();
-            Author author1 = new Author(2L,"Pavel Pavlov");
-            Author author2 = new Author(3L,"Kto-to");
-            authors.add(author1);
-            authors.add(author2);
-            assertTrue(authors.containsAll(authorDAO.getAvailableAuthors()));
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testGetAvailableAuthors() throws DAOException {
 
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
-
+        Set<Author> authors = new HashSet<>();
+        Author author1 = new Author(ID_2, NAME_2);
+        Author author2 = new Author(ID_3, NAME_3);
+        authors.add(author1);
+        authors.add(author2);
+        assertTrue(authors.containsAll(authorDAO.getAvailableAuthors()));
     }
 }

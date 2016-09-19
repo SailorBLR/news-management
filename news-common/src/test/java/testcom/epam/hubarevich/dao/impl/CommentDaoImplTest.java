@@ -39,12 +39,21 @@ import static org.junit.Assert.assertTrue;
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DbUnitTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
-@DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
-@DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+
 public class CommentDaoImplTest {
-    private final Logger LOG = LogManager.getLogger(CommentDaoImplTest.class);
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    String creation = "2016-06-20 20:15:11";
+    private final Long C_ID_1 = 1L;
+    private final Long N_ID_1 = 1L;
+    private final int NUM_COMMENTS_2 = 2;
+    private final int NUM_COMMENTS_3 = 3;
+    private final String C_TEXT = "Something";
+    private final String C_AUTHOR = "Author";
+    private final String C_TEXT_2 = "Something_Else";
+    private final Comment COMMENT = new Comment(C_ID_1, N_ID_1, C_TEXT, C_AUTHOR
+            , Calendar.getInstance().getTime());
+    private final News NEWS = new News(1L, "Text", "TEXT", "Text"
+            , Calendar.getInstance().getTime()
+            , Calendar.getInstance().getTime());
+
 
 
     @Autowired
@@ -53,95 +62,62 @@ public class CommentDaoImplTest {
     NewsDAOImpl newsDAO = new NewsDAOImpl();
 
     @Transactional
-    @Rollback(true)
     @Test
-    public void testCreate() throws Exception {
-
-        News news = new News();
-        news.setTitle("T");
-        news.setShortText("ST");
-        news.setFullText("S");
-        news.setNewsCreationDate(Calendar.getInstance().getTime());
-        news.setNewsModificationDate(Calendar.getInstance().getTime());
-        newsDAO.create(news);
-        Comment comment = new Comment();
-        comment.setNewsId(newsDAO.findAll().iterator().next().getNewsId());
-        comment.setCommentText("Something");
-        comment.setCommentAuthor("Anton");
-        comment.setCommentCreationDate(sdf.parse(creation));
-        Assert.assertNotEquals(Long.valueOf(0L), commentDao.create(comment));
+    public void testCreate() throws DAOException, ParseException {
+        long newsId = newsDAO.create(NEWS);
+        COMMENT.setNewsId(newsId);
+        Assert.assertNotEquals(Long.valueOf(0L), commentDao.create(COMMENT));
     }
 
 
     @Test
-    public void testDelete() {
-        try {
-            commentDao.delete(1L);
-            Assert.assertEquals(commentDao.findDomainById(1L), null);
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testDelete() throws DAOException {
+        commentDao.delete(C_ID_1);
+        Assert.assertEquals(null, commentDao.findDomainById(N_ID_1));
     }
 
     @Test
-    public void testUpdate() {
-        try {
-            Comment comment = new Comment(1L, 1L, "SomethingElse", "Anton", sdf.parse(creation));
-            commentDao.update(comment);
-            Assert.assertEquals(commentDao.findDomainById(1L).getCommentCreationDate().getTime()
-                    , comment.getCommentCreationDate().getTime());
-        } catch (DAOException|ParseException e) {
-            LOG.error(e);
-        }
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testUpdate() throws DAOException {
+        COMMENT.setCommentText(C_TEXT_2);
+        commentDao.update(COMMENT);
+        Assert.assertEquals(COMMENT.getCommentText(),
+                commentDao.findDomainById(C_ID_1).getCommentText());
     }
 
     @Test
-    public void testFindAll() {
-        try {
-            List<Comment> comments = new LinkedList<>();
-            comments.add(commentDao.findDomainById(1L));
-            comments.add(commentDao.findDomainById(2L));
-            comments.add(commentDao.findDomainById(3L));
-            assertTrue(commentDao.findAll().containsAll(comments));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindAll() throws DAOException {
+        assertTrue(NUM_COMMENTS_3 == commentDao.findAll().size());
     }
 
     @Test
-    public void testFindCommentsByNewsId() {
-        try {
-            List<Comment> comments = new LinkedList<>();
-            comments.add(commentDao.findDomainById(1L));
-            comments.add(commentDao.findDomainById(3L));
-            assertTrue(commentDao.findCommentsByNewsId(1L).containsAll(comments));
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testFindCommentsByNewsId() throws DAOException {
+        assertTrue(NUM_COMMENTS_2 == commentDao.findCommentsByNewsId(N_ID_1).size());
     }
 
     @Test
-    public void testFindDomainById() {
-        try {
-            Comment comment = new Comment(1L, 1L, "Something", "Anton",
-                    sdf.parse("2016-06-20 20:15:11"));
-            assertTrue(comment.equals(commentDao.findDomainById(1L)));
-        } catch (DAOException|ParseException e) {
-            LOG.error(e);
-        }
-
+    public void testFindDomainById() throws DAOException {
+        long newsId = newsDAO.create(NEWS);
+        COMMENT.setNewsId(newsId);
+        COMMENT.setCommentId(commentDao.create(COMMENT));
+        assertTrue(COMMENT.equals(commentDao.findDomainById(COMMENT.getCommentId())));
     }
 
     @Test
-    public void testDeleteCommentsByNewsId() {
+    @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
+    @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
+    public void testDeleteCommentsByNewsId() throws DAOException {
         List<Comment> comments;
-        try {
-            commentDao.deleteCommentsByNewsId(1L);
-            comments = commentDao.findCommentsByNewsId(1L);
-            assertTrue(comments.size() == 0);
-        } catch (DAOException e) {
-            LOG.error(e);
-        }
+        commentDao.deleteCommentsByNewsId(N_ID_1);
+        comments = commentDao.findCommentsByNewsId(N_ID_1);
+        assertTrue( 0 == comments.size());
     }
 }
 

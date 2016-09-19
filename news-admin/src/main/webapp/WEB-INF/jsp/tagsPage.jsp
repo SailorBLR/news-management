@@ -45,7 +45,7 @@
 
 </div>
 <div>
-    <sf:form modelAttribute="tag" action="/addTag" method="GET">
+    <sf:form modelAttribute="tag" action="/addTag" method="POST">
         <p><spring:message code="label.add.tag"/> <sf:input path="tagName"/>
             <sf:button type="submit" value="Create">
                 <spring:message code="label.add"/>
