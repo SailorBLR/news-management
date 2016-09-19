@@ -41,7 +41,7 @@ import static org.junit.Assert.assertTrue;
         DbUnitTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
 
-@ActiveProfiles("elink")
+@ActiveProfiles("hibernate")
 public class AuthorDaoImplTest{
     private final Logger LOG = LogManager.getLogger(AuthorDaoImplTest.class);
     private final String NAME_1 = "Ivan Ivanov";
@@ -119,7 +119,7 @@ public class AuthorDaoImplTest{
 
     }
 
-   /* @Test
+    @Test
     @DatabaseSetup(value = "classpath:dataset.xml", type = DatabaseOperation.CLEAN_INSERT)
     @DatabaseTearDown(value = "classpath:dataset.xml", type = DatabaseOperation.DELETE_ALL)
     public void testDelete() {
@@ -130,7 +130,7 @@ public class AuthorDaoImplTest{
         } catch (DAOException e) {
            LOG.error(e);
         }
-    }*/
+    }
 
 
     @Test

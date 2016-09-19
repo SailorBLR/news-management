@@ -28,6 +28,7 @@ import java.util.List;
 @Component
 public class AuthorController {
     private final String AUTHOR = "author";
+	private final String AUTHORS = "authors";
     private final String URL_ALL_AUTHOR = "/allAuthors";
     private final String URL_ADD_AUTHOR = "/addAuthor";
     private final String URL_UPDATE_AUTHOR = "/updateAuthor";
@@ -114,7 +115,7 @@ public class AuthorController {
         List<Author> authors;
         try {
             authors = authorService.getListOfAuthors();
-            model.addObject(AUTHOR, authors);
+            model.addObject(AUTHORS, authors);
 
         } catch (LogicException e) {
             throw new InternalServerException(e);

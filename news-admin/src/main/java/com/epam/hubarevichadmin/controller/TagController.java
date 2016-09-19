@@ -24,7 +24,7 @@ import java.util.List;
 @Controller
 @Component
 public class TagController {
-    private final Integer FIRST_PAGE = 1;
+  
     private final String URL_ALL_TAGS = "/allTags";
     private final String URL_ADD_TAG = "/addTag";
     private final String URL_DELETE_TAG = "/deleteTag";
