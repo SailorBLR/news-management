@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             version="1.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+    <persistence-unit name="oracle" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>com.epam.hubarevich.domain.Comment</class>
+        <class>com.epam.hubarevich.domain.Author</class>
+        <class>com.epam.hubarevich.domain.Tag</class>
+        <class>com.epam.hubarevich.domain.News</class>
+        <properties>
+
+            <property name="eclipselink.weaving" value="false"/>
+            <property name="eclipselink.ddl-generation" value="none"/>
+            <property name="eclipselink.batch.size" value="100"/>
+            <property name="eclipselink.batch.type" value="IN"/>
+
+            <!-- Logging -->
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.logging.timestamp" value="false"/>
+            <property name="eclipselink.logging.session" value="false"/>
+            <property name="eclipselink.logging.thread" value="false"/>
+        </properties>
+
+    </persistence-unit>
+</persistence>

@@ -22,7 +22,6 @@
             <column name="CREATION_DATE" not-null="true" />
         </property>
 
-
         <many-to-one name="news" class="com.epam.hubarevich.domain.News"
                      fetch="select" lazy="false">
             <column name="NEWS_ID" not-null="true" />

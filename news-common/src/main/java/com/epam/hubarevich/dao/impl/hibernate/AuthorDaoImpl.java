@@ -1,4 +1,4 @@
-package com.epam.hubarevich.dao.impl;
+package com.epam.hubarevich.dao.impl.hibernate;
 
 import com.epam.hubarevich.dao.AuthorDAO;
 import com.epam.hubarevich.dao.exception.DAOException;
@@ -6,11 +6,12 @@ import com.epam.hubarevich.domain.Author;
 import com.epam.hubarevich.dao.util.DeleteByIDUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
+@Profile("hibernate")
 public class AuthorDaoImpl implements AuthorDAO {
 
     private SessionFactory sessionFactory;

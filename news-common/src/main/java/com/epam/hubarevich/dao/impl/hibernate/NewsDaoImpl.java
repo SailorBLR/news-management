@@ -1,4 +1,4 @@
-package com.epam.hubarevich.dao.impl;
+package com.epam.hubarevich.dao.impl.hibernate;
 
 import com.epam.hubarevich.dao.NewsDAO;
 import com.epam.hubarevich.dao.exception.DAOException;
@@ -9,12 +9,14 @@ import com.epam.hubarevich.domain.Tag;
 import com.epam.hubarevich.domain.dto.SearchDTO;
 import com.epam.hubarevich.dao.util.DeleteByIDUtil;
 import com.epam.hubarevich.utils.ConfigurationManager;
+import com.sun.xml.internal.bind.v2.runtime.output.SAXOutput;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -22,17 +24,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+@Profile("hibernate")
 public class NewsDaoImpl implements NewsDAO {
 
     private SessionFactory sessionFactory;
-    private final String HQL_FIND_NEWS_BY_AUTHOR_ID = "SELECT N FROM Author A join A.news N WHERE A.authorId= :authorId";
+    private final String HQL_FIND_NEWS_BY_AUTHOR_ID = "SELECT N FROM News N join N.authors NA WHERE NA.authorId= :authorId";
     private final String HQL_NEWS_BY_TAGS = "SELECT distinct N FROM News N JOIN N.tags NT WHERE NT IN (:tags)";
     private final String HQL_FIND_ALL = "FROM News";
     private final String UNCHECKED = "unchecked";
     private final String A_ID = "authorId";
     private final String N_ID = "newsId";
     private final String N_TITLE = "title";
+    private final String AUTHOR = "author";
+    private final String TAGS = "tags";
 
     @Autowired
     HQLQueryBuilderUtil queryBuilderUtil;
@@ -52,9 +56,9 @@ public class NewsDaoImpl implements NewsDAO {
             Author author = (Author) sessionFactory.getCurrentSession().load(Author.class, authorId);
             News news = (News) sessionFactory.getCurrentSession().load(News.class, newsId);
             if (author != null && news != null) {
-                Set<News> newsList = new HashSet<>();
-                newsList.add(news);
-                author.setNews(newsList);
+                Set<Author> authorsList = new HashSet<>();
+                authorsList.add(author);
+                news.setAuthors(authorsList);
                 sessionFactory.getCurrentSession().flush();
             }
         } catch (HibernateException e) {
@@ -141,15 +145,17 @@ public class NewsDaoImpl implements NewsDAO {
     @Override
     @SuppressWarnings(UNCHECKED)
     public List<News> getPaginatedListBySearchCriteria(SearchDTO searchDTO, int startIndex, int finishIndex) throws DAOException {
+        System.out.println("NEWS BY SEARCH CRITERIA HIBER");
+        System.out.println(searchDTO);
         List<News> news = new ArrayList<>();
         try {
             Query query = sessionFactory.getCurrentSession()
                     .createQuery(queryBuilderUtil.buildNewsSearchQuery(searchDTO));
             if (searchDTO.getAuthor() != null) {
-                query.setParameter("author", searchDTO.getAuthor());
+                query.setParameter(AUTHOR, searchDTO.getAuthor());
             }
             if (searchDTO.getTags() != null) {
-                query.setParameterList("tags", searchDTO.getTags());
+                query.setParameterList(TAGS, searchDTO.getTags());
             }
             query.setFirstResult(startIndex - 1);
             query.setMaxResults(Integer.valueOf(ConfigurationManager.getProperty("cfg.news")));
@@ -169,10 +175,10 @@ public class NewsDaoImpl implements NewsDAO {
                     .createQuery(queryBuilderUtil.buildRownumByIdQuery(searchDTO));
 
             if (searchDTO.getAuthor() != null) {
-                query.setParameter("author", searchDTO.getAuthor());
+                query.setParameter(AUTHOR, searchDTO.getAuthor());
             }
             if (searchDTO.getTags() != null) {
-                query.setParameterList("tags", searchDTO.getTags());
+                query.setParameterList(TAGS, searchDTO.getTags());
             }
             ids = query.list();
         } catch (HibernateException e) {

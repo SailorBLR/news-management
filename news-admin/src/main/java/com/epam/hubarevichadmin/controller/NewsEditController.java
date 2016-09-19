@@ -29,6 +29,21 @@ import java.util.List;
 @Component
 @SessionAttributes("searchCriteria")
 public class NewsEditController {
+    private final String DEFAULT_VALUE = "0";
+    private final String URL_ADD_NEWS = "/addNews";
+    private final String URL_ADD_NEW_MESSAGE = "/addNewMessage";
+    private final String URL_DELETE_MESSAGE = "/deleteMessage";
+    private final String URL_ALL_NEWS = "redirect: /allNews";
+    private final String AUTHOR_LIST = "authorList";
+    private final String TAG_LIST = "tagList";
+    private final String ADD_NEWS = "addNews";
+    private final String ID = "id";
+    private final String BIND_CLASS = "org.springframework.validation.BindingResult.newsDto";
+    private final String NEWS_DTO = "newsDto";
+    private final String MESSAGE = "message";
+    private final String NEWS_MESSAGE = "newsMessage";
+
+
     @Autowired
     NewsService newsService;
     @Autowired
@@ -40,19 +55,20 @@ public class NewsEditController {
     @Autowired
     NewsValidatorUtil newsValidatorUtil;
 
-    @InitBinder("newsDto")
+    @InitBinder(NEWS_DTO)
     private void initCmtBinder(WebDataBinder binder) {
         binder.setValidator(newsValidatorUtil);
     }
 
 
-    @RequestMapping(value = "/addNews", method = RequestMethod.GET)
-    public ModelAndView addSingleNewsMessage(@RequestParam(value = "id", defaultValue = "0") Long newsId) throws InternalServerException {
-        ModelAndView model = new ModelAndView("addNews");
-        NewsDTO newsDTO=null;
+    @RequestMapping(value = URL_ADD_NEWS, method = RequestMethod.GET)
+    public ModelAndView addSingleNewsMessage(@RequestParam(value = ID, defaultValue = DEFAULT_VALUE) Long newsId)
+            throws InternalServerException {
+        ModelAndView model = new ModelAndView(ADD_NEWS);
+        NewsDTO newsDTO;
 
         try {
-            if (newsId != 0L) {
+            if (!Long.valueOf(DEFAULT_VALUE).equals(newsId)) {
                 newsDTO = newsService.getNewsById(newsId);
             } else {
                 newsDTO = new NewsDTO();
@@ -64,29 +80,30 @@ public class NewsEditController {
         return model;
     }
 
-    @RequestMapping(value = "/addNewMessage", method = RequestMethod.POST)
-    public ModelAndView addNewMessage(@Validated@ModelAttribute("newsDto") NewsDTO newsDTO,
-                                BindingResult result, RedirectAttributes redirectAttributes) throws InternalServerException {
+    @RequestMapping(value = URL_ADD_NEW_MESSAGE, method = RequestMethod.POST)
+    public ModelAndView addNewMessage(@Validated@ModelAttribute(NEWS_DTO) NewsDTO newsDTO,
+                                BindingResult result, RedirectAttributes redirectAttributes)
+            throws InternalServerException {
 
         ModelAndView model = new ModelAndView();
 
 
         if (result.hasErrors()) {
-            model.setViewName("addNews");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.newsDto", result);
+            model.setViewName(ADD_NEWS);
+            redirectAttributes.addFlashAttribute(BIND_CLASS, result);
             formNewsModel(model,newsDTO);
             return model;
         }
 
-        model.setViewName("newsMessage");
+        model.setViewName(NEWS_MESSAGE);
         try {
             if(newsDTO.getNews().getNewsId()!=null){
                newsService.updateNews(newsDTO);
-                model.addObject("message",newsService.getNewsById(newsDTO.getNews().getNewsId()));
+                model.addObject(MESSAGE,newsService.getNewsById(newsDTO.getNews().getNewsId()));
             } else {
                 newsService.createNews(newsDTO);
 
-                model.addObject("message",newsService.getNewsByTitle(newsDTO.getNews()));
+                model.addObject(MESSAGE,newsService.getNewsByTitle(newsDTO.getNews()));
             }
 
         } catch (LogicException e) {
@@ -95,8 +112,9 @@ public class NewsEditController {
         return model;
     }
 
-    @RequestMapping(value = "/deleteMessage", method = RequestMethod.GET)
-    public String deleteMessage(@RequestParam(value = "id", defaultValue = "0") Long newsId) throws InternalServerException {
+    @RequestMapping(value = URL_DELETE_MESSAGE, method = RequestMethod.GET)
+    public String deleteMessage(@RequestParam(value = ID, defaultValue = DEFAULT_VALUE) Long newsId)
+            throws InternalServerException {
         try {
             if (newsId != null) {
                 newsDeleteService.deleteNewsMessage(newsId);
@@ -104,7 +122,7 @@ public class NewsEditController {
         } catch (LogicException e) {
             throw new InternalServerException(e);
         }
-        return "redirect: /allNews";
+        return URL_ALL_NEWS;
     }
 
     private void formNewsModel(ModelAndView model,NewsDTO newsDTO) throws InternalServerException {
@@ -112,11 +130,11 @@ public class NewsEditController {
         List<Author> authors;
         List<Tag> tags;
         try {
-            model.addObject("newsDto",newsDTO);
+            model.addObject(NEWS_DTO,newsDTO);
             authors = authorService.getListAvailableAuthors();
             tags = tagService.getListOfTags();
-            model.addObject("authorList", authors);
-            model.addObject("tagList", tags);
+            model.addObject(AUTHOR_LIST, authors);
+            model.addObject(TAG_LIST, tags);
         }catch (LogicException e){
             throw new InternalServerException(e);
         }

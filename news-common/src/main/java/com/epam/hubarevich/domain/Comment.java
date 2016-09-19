@@ -2,6 +2,7 @@ package com.epam.hubarevich.domain;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,32 +11,45 @@ import java.util.Date;
  * @author Anton_Hubarevich
  * @version 1.0
  */
-
+@Entity
+@Table(name = "COMMENTS")
 public class Comment extends Domain {
     private static final long serialVersionUID = 1L;
 
     /**
      * Comment identifier
      */
+    @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "CommentGen")
+    @SequenceGenerator(name = "CommentGen", sequenceName = "COMMENTS_SEQ"
+            ,initialValue = 50, allocationSize = 2)
+    @Column(name = "COMMENT_ID")
     private Long commentId;
     /**
      * News message identifier
      */
+    @Column(name = "NEWS_ID")
     private Long newsId;
     /**
      * Comment text
      */
+    @Column(name = "COMMENT_TEXT")
     private String commentText;
 
     /**
      * The name of comment author
      */
+    @Column(name = "COMMENT_AUTHOR")
     private String commentAuthor;
     /**
      * Comment creation date
      */
+    @Column(name = "CREATION_DATE")
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date commentCreationDate;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="NEWS_ID", insertable=false, updatable=false)
     private News news;
 
     public News getNews() {

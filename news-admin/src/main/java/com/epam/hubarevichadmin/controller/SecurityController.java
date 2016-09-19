@@ -17,40 +17,53 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Created by Anton_Hubarevich on 7/26/2016.
- */
+
 @Component
 @Controller
 @SessionAttributes("searchCriteria")
 public class SecurityController {
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView login(@RequestParam(value = "error", required = false) String error,
-                              @RequestParam(value = "logout", required = false) String logout,
+
+    private final String URL_LOGIN = "/login";
+    private final String URL_403 = "/403";
+    private final String LABEL403 = "/403";
+    private final String ERROR = "error";
+    private final String LOGOUT = "logout";
+    private final String LOGIN = "login";
+    private final String INVALID_MESSAGE = "Invalid username and password!";
+    private final String LOGOUT_MESSAGE = "You've been logged out successfully.";
+    private final String MESSAGE = "msg";
+    private final String SEARCH_CRITERIA = "searchCriteria";
+    private final String USERNAME = "username";
+
+
+
+    @RequestMapping(value = URL_LOGIN, method = RequestMethod.GET)
+    public ModelAndView login(@RequestParam(value = ERROR, required = false) String error,
+                              @RequestParam(value = LOGOUT, required = false) String logout,
                               HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        ModelAndView model = new ModelAndView("login");
+        ModelAndView model = new ModelAndView(LOGIN);
 
         if (error != null) {
-            model.addObject("error", "Invalid username and password!");
+            model.addObject(ERROR, INVALID_MESSAGE);
         }
 
         if (logout != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
-            model.addObject("msg", "You've been logged out successfully.");
+            model.addObject(MESSAGE, LOGOUT_MESSAGE);
         }
 
         SearchDTO searchDTO = new SearchDTO();
         searchDTO.setNextId(1L);
-        model.addObject("searchCriteria", searchDTO);
+        model.addObject(SEARCH_CRITERIA, searchDTO);
 
         return model;
 
     }
 
     //for 403 access denied page
-    @RequestMapping(value = "/403", method = RequestMethod.GET)
+    @RequestMapping(value = URL_403, method = RequestMethod.GET)
     public ModelAndView accesssDenied() {
 
         ModelAndView model = new ModelAndView();
@@ -59,10 +72,10 @@ public class SecurityController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             UserDetails userDetail = (UserDetails) auth.getPrincipal();
-            model.addObject("username", userDetail.getUsername());
+            model.addObject(USERNAME, userDetail.getUsername());
         }
 
-        model.setViewName("403");
+        model.setViewName(LABEL403);
         return model;
 
     }

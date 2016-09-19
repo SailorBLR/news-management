@@ -18,15 +18,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @Component
 public class CommentController {
+    private final String COMMENT = "comment";
+    private final String AUTHOR = "author";
+    private final String NEWS_ID = "newsId";
+    private final String COMMENT_ID = "commentId";
+    private final String URL_POST_COMMENT = "/postComment**";
+    private final String URL_NEWS_MESSAGE = "redirect:/newsMessage?id=";
+    private final String URL_DELETE_COMMENT = "/deleteComment";
+
+
     @Autowired
     NewsService newsService;
     @Autowired
     CommentService commentService;
 
-    @RequestMapping(value = "/postComment**", method = RequestMethod.POST)
-    public String postComment(@RequestParam(value = "newsId") String newsId,
-                              @RequestParam(value = "author") String author,
-                              @RequestParam(value = "comment") String text) throws InternalServerException {
+    @RequestMapping(value = URL_POST_COMMENT , method = RequestMethod.POST)
+    public String postComment(@RequestParam(value = NEWS_ID) String newsId,
+                              @RequestParam(value = AUTHOR) String author,
+                              @RequestParam(value = COMMENT) String text) throws InternalServerException {
         Comment comment = new Comment();
         comment.setNewsId(Long.valueOf(newsId));
         comment.setCommentAuthor(author);
@@ -39,12 +48,12 @@ public class CommentController {
             throw new InternalServerException(e);
         }
 
-        return ("redirect:/newsMessage?id="+newsId);
+        return (URL_NEWS_MESSAGE.concat(newsId));
     }
 
-    @RequestMapping(value = "/deleteComment", method = RequestMethod.GET)
-    public String deleteComment(@RequestParam(value = "commentId") String commentId,
-                                @RequestParam(value = "newsId") Long newsId) throws InternalServerException {
+    @RequestMapping(value = URL_DELETE_COMMENT, method = RequestMethod.GET)
+    public String deleteComment(@RequestParam(value = COMMENT_ID) String commentId,
+                                @RequestParam(value = NEWS_ID) String newsId) throws InternalServerException {
 
         try {
             commentService.deleteComment(Long.valueOf(commentId));
@@ -52,6 +61,6 @@ public class CommentController {
             throw new InternalServerException(e);
         }
 
-        return ("redirect:/newsMessage?id="+newsId);
+        return (URL_NEWS_MESSAGE.concat(newsId));
     }
 }

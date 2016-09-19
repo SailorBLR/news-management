@@ -1,5 +1,6 @@
 package com.epam.hubarevich.domain;
 
+import javax.persistence.*;
 import java.util.Set;
 
 /**
@@ -7,18 +8,32 @@ import java.util.Set;
  * @author Anton_Hubarevich
  * @version 1.0
  */
-
+@Entity
+@Table(name = "TAGS")
 public class Tag extends Domain {
     private static final long serialVersionUID = 1L;
 
     /**
      * Unique tag identifier
      */
+    @Id
+    @GeneratedValue(generator = "TagGen")
+    @SequenceGenerator(name = "TagGen", sequenceName = "TAGS_SEQ")
+    @Column(name = "TAG_ID")
     private Long tagId;
     /**
      * Tag name
      */
+    @Column(name = "TAG_NAME")
     private String tagName;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name="NEWS_TAGS",
+            joinColumns=
+            @JoinColumn(name="TAG_ID"),
+            inverseJoinColumns=
+            @JoinColumn(name="NEWS_ID")
+    )
     private Set<News> news;
 
     public Set<News> getNews() {

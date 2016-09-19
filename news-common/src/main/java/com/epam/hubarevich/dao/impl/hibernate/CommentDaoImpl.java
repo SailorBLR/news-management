@@ -1,4 +1,4 @@
-package com.epam.hubarevich.dao.impl;
+package com.epam.hubarevich.dao.impl.hibernate;
 
 import com.epam.hubarevich.dao.CommentDAO;
 import com.epam.hubarevich.dao.exception.DAOException;
@@ -9,19 +9,24 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
+@Profile("hibernate")
 public class CommentDaoImpl implements CommentDAO {
 
     private SessionFactory sessionFactory;
 
     private final String C_ID = "commentId";
     private final String N_ID = "newsId";
-    private final String HQL_COMMENT_BY_NEWS_ID = "SELECT C FROM Comment C WHERE C.newsId=:newsId";
-    private final String HQL_ALL_COMMENTS = "SELECT C FROM Comment C";
+    private final String HQL_COMMENT_BY_NEWS_ID = "SELECT C " +
+                                                  "FROM Comment C " +
+                                                  "WHERE C.newsId=:newsId";
+
+    private final String HQL_ALL_COMMENTS = "SELECT C " +
+                                            "FROM Comment C";
     private final String UNCHECKED = "unchecked";
 
 
@@ -87,13 +92,16 @@ public class CommentDaoImpl implements CommentDAO {
     @Override
 
     public Long create(Comment domain) throws DAOException {
-        Long resultId;
+
+        Long id;
         try {
-            resultId = (Long) sessionFactory.getCurrentSession().save(domain);
+            sessionFactory.getCurrentSession().save(domain);
+            sessionFactory.getCurrentSession().persist(domain);
+
         } catch (HibernateException e){
             throw new DAOException(e);
         }
-        return resultId;
+        return domain.getCommentId();
     }
 
     @Override

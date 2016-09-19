@@ -8,6 +8,7 @@ import com.epam.hubarevich.service.exception.LogicException;
 import com.epam.hubarevich.utils.AuthorCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Created by Anton_Hubarevich on 6/24/2016.
  */
-@Component
+@Service
 @Transactional
 public class AuthorServiceImpl implements AuthorService {
 

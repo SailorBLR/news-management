@@ -3,6 +3,7 @@ package com.epam.hubarevich.dao.util;
 import com.epam.hubarevich.domain.Tag;
 import com.epam.hubarevich.domain.dto.SearchDTO;
 import org.hibernate.Query;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,18 +14,36 @@ import java.util.List;
 @Component
 public class HQLQueryBuilderUtil {
 
-    private final String HQL_PAGINATION_START = "SELECT DISTINCT N FROM News N ";
-    private final String HQL_JOIN_AUTHORS = "LEFT JOIN N.authors NA ";
-    private final String HQL_JOIN_TAGS = "LEFT JOIN N.tags NT ";
+
+/*    "SELECT DISTINCT N " +
+            "FROM News N LEFT JOIN N.comments NC " +
+            "INNER JOIN N.authors NA " +
+            "INNER JOIN N.tags NT " +
+            "WHERE NA = :author OR NT IN :tags " +
+            "group by N.newsId,N.title,N.shortText,N.fullText,N.newsCreationDate, N.newsModificationDate " +
+            "order by count (NC) desc, N.newsModificationDate DESC"*/
+
+    private final String HQL_PAGINATION_START =
+            "SELECT N " +
+            "FROM News N " +
+            "LEFT JOIN N.comments NC ";
+    private final String HQL_JOIN_AUTHORS = "INNER JOIN N.authors NA ";
+    private final String HQL_JOIN_TAGS = "INNER JOIN N.tags NT ";
     private final String HQL_WHERE = "WHERE ";
     private final String HQL_OR = "OR ";
-    private final String HQL_WHERE_AUTHOR = ":author IN NA ";
+    private final String HQL_WHERE_AUTHOR = "NA = :author ";
     private final String HQL_WHERE_TAGS = "NT IN :tags ";
-    private final String HQL_SEARCH_QUERY_END = "group by N.newsId,N.title,N.shortText,N.fullText,N.newsCreationDate, N.newsModificationDate " +
-            " order by N.comments.size desc, N.newsModificationDate DESC";
+    private final String HQL_SEARCH_QUERY_END =
+            "group by N.newsId,N.title,N.shortText,N.fullText,N.newsCreationDate, N.newsModificationDate " +
+            " order by count (NC) desc, N.newsModificationDate DESC";
 
-    private final String HQL_QUANTITY_START = "SELECT COUNT (N) FROM News N ";
-    private final String HQL_CURRENT_NEWS_ROWNUM_START = "SELECT N.newsId FROM News N ";
+    private final String HQL_QUANTITY_START =
+            "SELECT COUNT (N) " +
+            "FROM News N ";
+    private final String HQL_ID_LIST =
+            "SELECT N.newsId " +
+            "FROM News N " +
+            "LEFT JOIN N.comments NC ";
 
 
 
@@ -96,26 +115,13 @@ public class HQLQueryBuilderUtil {
     public String buildNewsCountQuery(SearchDTO searchDTO) {
         String query = HQL_QUANTITY_START;
         query = query.concat(buildSearchCriteriaQuery(searchDTO));
-        //query = query.concat(HQL_SEARCH_QUERY_END);
         return query;
     }
 
     public String buildRownumByIdQuery (SearchDTO searchDTO) {
-        String query = HQL_CURRENT_NEWS_ROWNUM_START;
+        String query = HQL_ID_LIST;
         query = query.concat(buildSearchCriteriaQuery(searchDTO));
         query = query.concat(HQL_SEARCH_QUERY_END);
         return query;
     }
-/*
-    *//**
-     * Builds the query for Next and Previous page search
-     * @param searchDTO Search criteria object
-     * @return String query
-     *//*
-    public String buildPrevNextQuery (SearchDTO searchDTO) {
-        String query = SQL_CURRENT_NEWS_ROWNUM;
-        query = query.concat(buildSearchCriteriaQuery(searchDTO));
-        query = query.concat(SQL_NEXT_PREV_END);
-        return query;
-    }*/
 }

@@ -9,12 +9,13 @@ import com.epam.hubarevich.service.exception.LogicException;
 import com.epam.hubarevich.utils.CommentCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Anton_Hubarevich on 6/27/2016.
  */
-@Component
+@Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
 

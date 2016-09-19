@@ -25,7 +25,7 @@
             <column name="MODIFICATION_DATE" not-null="true" />
         </property>
         <set name="authors" table="NEWS_AUTHORS"
-             inverse="false" lazy="false" fetch="select">
+             inverse="false" lazy="false" fetch="select" access="property">
             <key column="NEWS_ID" />
             <many-to-many column="AUTHOR_ID" class="com.epam.hubarevich.domain.Author"/>
         </set>
@@ -37,7 +37,7 @@
         </set>
 
         <set name="comments" table="COMMENTS"
-             inverse="true" lazy="false" fetch="select" cascade="delete, delete-orphan">
+             inverse="true" lazy="false" fetch="select" cascade="delete, delete-orphan" access="property">
             <key>
                 <column name="NEWS_ID" not-null="true" />
             </key>
