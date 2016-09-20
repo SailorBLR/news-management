@@ -3,44 +3,99 @@ package com.epam.hubarevich.domain;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Class used to represent News message entity
  * @author Anton_Hubarevich
  * @version 1.0
  */
-
+@Entity
+@Table(name ="NEWS")
 public class News extends Domain {
     private static final long serialVersionUID = 1L;
+    @Transient
     private final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
     /**
      * News message identifier
      */
+    @Id
+    @GeneratedValue(generator = "NewsGen")
+    @SequenceGenerator(name = "NewsGen", sequenceName = "NEWS_SEQ")
+    @Column(name = "NEWS_ID")
     private Long newsId;
     /**
      * News message title
      */
+    @Column(name = "TITLE")
     private String title;
     /**
      * News message short text message
      */
+    @Column(name = "SHORT_TEXT")
     private String shortText;
     /**
      * News message full text message
      */
+    @Column(name = "FULL_TEXT")
     private String fullText;
     /**
      * News message creation date
      */
+    @Column(name = "CREATION_DATE")
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date newsCreationDate;
     /**
      * News message modification date
      */
+    @Column(name = "MODIFICATION_DATE")
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date newsModificationDate;
+
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "news")
+    private Set<Comment> comments;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "NEWS_AUTHORS",
+            joinColumns = @JoinColumn(name = "NEWS_ID", referencedColumnName = "NEWS_ID"),
+            inverseJoinColumns = @JoinColumn(name = "AUTHOR_ID", referencedColumnName = "AUTHOR_ID"))
+    private Set<Author> authors;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "NEWS_TAGS",
+            joinColumns = @JoinColumn(name = "NEWS_ID", referencedColumnName = "NEWS_ID"),
+            inverseJoinColumns = @JoinColumn(name = "TAG_ID", referencedColumnName = "TAG_ID"))
+    private Set<Tag> tags;
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
 
     public News() {
     }

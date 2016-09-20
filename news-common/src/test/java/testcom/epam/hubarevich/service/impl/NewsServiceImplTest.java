@@ -10,7 +10,6 @@ import com.epam.hubarevich.domain.News;
 import com.epam.hubarevich.domain.Tag;
 import com.epam.hubarevich.domain.dto.NewsDTO;
 import com.epam.hubarevich.domain.dto.SearchDTO;
-import com.epam.hubarevich.service.NewsService;
 import com.epam.hubarevich.service.exception.LogicException;
 import com.epam.hubarevich.service.impl.NewsServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +29,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;

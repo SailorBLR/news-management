@@ -6,12 +6,12 @@ import com.epam.hubarevich.service.NewsService;
 import com.epam.hubarevich.service.exception.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * Service class for news message deleting
  */
-@Service
+@Component
+@Deprecated
 public class NewsDeleteService {
 
     @Autowired

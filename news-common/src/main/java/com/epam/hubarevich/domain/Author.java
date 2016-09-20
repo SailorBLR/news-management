@@ -2,39 +2,72 @@ package com.epam.hubarevich.domain;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Class used to represent Author entity
+ *
  * @author Anton_Hubarevich
  * @version 1.0
  */
-
+@Entity
+@Table(name = "AUTHORS")
 public class Author extends Domain {
     private static final long serialVersionUID = 1L;
 
     /**
      * Author identifier
      */
+
+    @Id
+    @SequenceGenerator(name = "COM_SEQ",
+            sequenceName = "COMMENTS_SEQ",
+            allocationSize = 50, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "COM_SEQ")
+    @Column(name = "AUTHOR_ID")
     private Long authorId;
+
     /**
      * Author name
      */
+
+    @Column(name = "AUTHOR_NAME")
     private String authorName;
 
     /**
      * Author expiration date
      * NULL if is not expired
      */
+    @Temporal(TemporalType.DATE)
+    @Column(name = "EXPIRED")
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date expired;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "NEWS_AUTHORS",
+            joinColumns = @JoinColumn(name = "AUTHOR_ID", referencedColumnName = "AUTHOR_ID"),
+            inverseJoinColumns = @JoinColumn(name = "NEWS_ID", referencedColumnName = "NEWS_ID"))
+    private Set<News> news;
+
+    public Set<News> getNews() {
+        return news;
+    }
+
+    public void setNews(Set<News> news) {
+        this.news = news;
+    }
 
     public Author() {
     }
 
     /**
      * Author constructor
-     * @param authorId positive Long identifier
+     *
+     * @param authorId   positive Long identifier
      * @param authorName String value. Limit 30 symbols
      */
 
@@ -71,7 +104,7 @@ public class Author extends Domain {
     public String toString() {
         return "Author{" +
                 "authorId=" + authorId +
-                ", authorName='" + authorName+'}';
+                ", authorName='" + authorName + '}';
     }
 
     @Override
@@ -91,7 +124,7 @@ public class Author extends Domain {
         if (!authorName.equals(author.authorName)) {
             return false;
         }
-        return !(expired != null ? !expired.equals(author.expired) : author.expired != null);
+        return true;
 
     }
 
@@ -99,7 +132,6 @@ public class Author extends Domain {
     public int hashCode() {
         int result = authorId.hashCode();
         result = 31 * result + authorName.hashCode();
-        result = 31 * result + (expired != null ? expired.hashCode() : 0);
         return result;
     }
 }

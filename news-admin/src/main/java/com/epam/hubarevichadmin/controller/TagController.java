@@ -1,6 +1,5 @@
 package com.epam.hubarevichadmin.controller;
 
-import com.epam.hubarevich.domain.Author;
 import com.epam.hubarevich.domain.Tag;
 import com.epam.hubarevich.service.TagService;
 import com.epam.hubarevich.service.exception.LogicException;

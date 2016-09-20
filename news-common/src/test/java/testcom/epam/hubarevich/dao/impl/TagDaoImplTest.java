@@ -3,15 +3,11 @@ package testcom.epam.hubarevich.dao.impl;
 import com.epam.hubarevich.dao.NewsDAO;
 import com.epam.hubarevich.dao.TagDAO;
 import com.epam.hubarevich.dao.exception.DAOException;
-import com.epam.hubarevich.dao.impl.TagDAOImpl;
 import com.epam.hubarevich.domain.Tag;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +18,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;

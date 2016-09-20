@@ -2,6 +2,7 @@ package com.epam.hubarevich.domain;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,32 +11,54 @@ import java.util.Date;
  * @author Anton_Hubarevich
  * @version 1.0
  */
-
+@Entity
+@Table(name = "COMMENTS")
 public class Comment extends Domain {
     private static final long serialVersionUID = 1L;
 
     /**
      * Comment identifier
      */
+    @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "CommentGen")
+    @SequenceGenerator(name = "CommentGen", sequenceName = "COMMENTS_SEQ"
+            ,initialValue = 50, allocationSize = 2)
+    @Column(name = "COMMENT_ID")
     private Long commentId;
     /**
      * News message identifier
      */
+    @Column(name = "NEWS_ID")
     private Long newsId;
     /**
      * Comment text
      */
+    @Column(name = "COMMENT_TEXT")
     private String commentText;
 
     /**
      * The name of comment author
      */
+    @Column(name = "COMMENT_AUTHOR")
     private String commentAuthor;
     /**
      * Comment creation date
      */
+    @Column(name = "CREATION_DATE")
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm")
     private Date commentCreationDate;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="NEWS_ID", insertable=false, updatable=false)
+    private News news;
+
+    public News getNews() {
+        return news;
+    }
+
+    public void setNews(News news) {
+        this.news = news;
+    }
 
     public Comment() {
     }
@@ -103,11 +126,8 @@ public class Comment extends Domain {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Comment comment = (Comment) o;
-
         if (!commentId.equals(comment.commentId)) return false;
-        if (!newsId.equals(comment.newsId)) return false;
         if (!commentText.equals(comment.commentText)) return false;
         if (!commentAuthor.equals(comment.commentAuthor)) return false;
         return commentCreationDate.equals(comment.commentCreationDate);
@@ -117,7 +137,6 @@ public class Comment extends Domain {
     @Override
     public int hashCode() {
         int result = commentId.hashCode();
-        result = 31 * result + newsId.hashCode();
         result = 31 * result + commentText.hashCode();
         result = 31 * result + commentAuthor.hashCode();
         result = 31 * result + commentCreationDate.hashCode();
@@ -128,7 +147,6 @@ public class Comment extends Domain {
     public String toString() {
         return "Comment{" +
                 "commentId=" + commentId +
-                ", newsId=" + newsId +
                 ", commentText='" + commentText + '\'' +
                 ", commentAuthor='" + commentAuthor + '\'' +
                 ", commentCreationDate=" + commentCreationDate +

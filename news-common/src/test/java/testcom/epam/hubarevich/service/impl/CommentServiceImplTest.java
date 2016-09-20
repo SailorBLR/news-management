@@ -1,8 +1,10 @@
 package testcom.epam.hubarevich.service.impl;
 
 import com.epam.hubarevich.dao.CommentDAO;
+import com.epam.hubarevich.dao.NewsDAO;
 import com.epam.hubarevich.dao.exception.DAOException;
 import com.epam.hubarevich.domain.Comment;
+import com.epam.hubarevich.domain.News;
 import com.epam.hubarevich.service.exception.LogicException;
 import com.epam.hubarevich.service.impl.CommentServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -32,11 +34,14 @@ public class CommentServiceImplTest {
 
     @Mock
     CommentDAO commentDAO;
+    @Mock
+    NewsDAO newsDAO;
 
     @Test
     public void testAddComment() {
         try {
             Comment comment = new Comment(1L,1L, "Name","Anton", Calendar.getInstance().getTime());
+            when(newsDAO.findDomainById(anyLong())).thenReturn(new News());
             when(commentDAO.create(comment)).thenReturn(1L);
             Assert.assertEquals(Long.valueOf(1L), commentService.addComment(comment));
         } catch (DAOException | LogicException e) {
