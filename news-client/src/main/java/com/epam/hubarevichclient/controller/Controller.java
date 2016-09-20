@@ -23,9 +23,13 @@ import java.io.IOException;
 @Component
 @WebServlet("/controller")
 public class Controller extends HttpServlet {
-    private static final Logger LOG = LogManager.getLogger(Controller.class);
-    private static final long serialVersionUID = 1L;
-    private static final String MAIN_PAGE = "/WEB-INF/jsp/main.jsp";
+    private final Logger LOG = LogManager.getLogger(Controller.class);
+    private final long serialVersionUID = 1L;
+    private final String MAIN_PAGE = "/WEB-INF/jsp/main.jsp";
+    private final String CLEAR_MARKER = "clearMarker";
+    private final String SEARCH_CRITERIA = "searchCriteria";
+    private final String TRUE = "true";
+    private final String INCLUDE = "include";
     private WebApplicationContext webApplicationContext;
 
     /**
@@ -58,14 +62,11 @@ public class Controller extends HttpServlet {
     private void processRequest(HttpServletRequest request,
                                 HttpServletResponse response)
             throws ServletException, IOException {
-    	
 
-        System.out.println("log " + request.getParameter("clearMarker"));
-        System.out.println("log " + request.getSession().getAttribute("searchCriteria"));
-        if("true".equals(request.getParameter("clearMarker"))
-                |request.getSession().getAttribute("searchCriteria")==null){
+        if(TRUE.equals(request.getParameter(CLEAR_MARKER))
+                |request.getSession().getAttribute(SEARCH_CRITERIA)==null){
             SearchDTO searchDTO = new SearchDTO();
-            request.getSession().setAttribute("searchCriteria",searchDTO);
+            request.getSession().setAttribute(SEARCH_CRITERIA,searchDTO);
         }
 
         String include=null;
@@ -78,7 +79,7 @@ public class Controller extends HttpServlet {
             throw new ServletException(e);
         }
 
-        request.setAttribute("include",include);
+        request.setAttribute(INCLUDE,include);
         RequestDispatcher dispatcher = getServletContext()
                 .getRequestDispatcher(MAIN_PAGE);
         dispatcher.forward(request, response);

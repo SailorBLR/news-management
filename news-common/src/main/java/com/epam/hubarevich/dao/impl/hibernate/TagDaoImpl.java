@@ -10,7 +10,6 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.context.annotation.Profile;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,8 +17,13 @@ import java.util.List;
 public class TagDaoImpl implements TagDAO {
 
     private SessionFactory sessionFactory;
-    private final String HQL_FROM_TAGS = "FROM Tag";
-    private final String HQL_FIND_TAG_BY_NEWS_ID = "SELECT T FROM Tag T join T.news NT WHERE NT.newsId= :newsId";
+    private final String HQL_FROM_TAGS =
+            "FROM Tag";
+    private final String HQL_FIND_TAG_BY_NEWS_ID =
+            "SELECT T " +
+            "FROM Tag T " +
+            "JOIN T.news NT " +
+            "WHERE NT.newsId= :newsId";
     private final String TAG_ID = "tagId";
     private final String NEWS_ID = "newsId";
     private final String UNCHECKED = "unchecked";

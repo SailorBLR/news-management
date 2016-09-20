@@ -1,6 +1,5 @@
 package com.epam.hubarevich.dao.util;
 
-import com.epam.hubarevich.dao.exception.DAOException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 

@@ -25,7 +25,7 @@ import java.util.List;
 @Component
 @SessionAttributes("searchCriteria")
 public class NewsController {
-    private final Integer FIRST_PAGE = 1;
+    private final String FIRST_PAGE = "1";
     private final String URL_ALL = "/all**";
     private final String URL_NEWS_MESSAGE = "/newsMessage";
     private final String NEXT_PAGE = "nextPage";
@@ -48,12 +48,12 @@ public class NewsController {
 
 
     @RequestMapping(value = URL_ALL, method = RequestMethod.GET)
-    public ModelAndView getListOfNews (@RequestParam(value = NEXT_PAGE, defaultValue = NEXT_PAGE) String nextPage,
+    public ModelAndView getListOfNews (@RequestParam(value = NEXT_PAGE, defaultValue = FIRST_PAGE) String nextPage,
                                        @ModelAttribute(SEARCH_CRITERIA) SearchDTO searchDto) throws InternalServerException {
         searchDto.setNull();
 
-        int page = FIRST_PAGE;
-        if (!nextPage.equals(FIRST_PAGE.toString())) {
+        int page = 1;
+        if (!nextPage.equals(FIRST_PAGE)) {
             page = Integer.valueOf(nextPage);
         }
 

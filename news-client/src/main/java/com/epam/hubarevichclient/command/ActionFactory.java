@@ -26,9 +26,7 @@ public class ActionFactory {
         try {
             current = (ActionCommand) webApplicationContext.getBean(action);
         } catch (IllegalArgumentException e) {
-            request.setAttribute(WRONG_ACTION, action
-                    /*+ MessageManagerWrapper
-                    .getMessage("message.wrongaction",request.getSession().getAttribute(LOCALE).toString())*/);
+            request.setAttribute(WRONG_ACTION, action);
         }
         return current;
     }

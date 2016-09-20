@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 public class ErrorController extends HttpServlet {
     private static final String MAIN_PAGE = "/WEB-INF/jsp/main.jsp";
     private static final String ERROR_PAGE = "/WEB-INF/jsp/includes/error.jsp";
+    private static final String INCLUDE = "include";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processError(request,response);
@@ -25,7 +26,7 @@ public class ErrorController extends HttpServlet {
     }
 
     private void processError(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setAttribute("include",ERROR_PAGE);
+        request.setAttribute(INCLUDE,ERROR_PAGE);
 
         RequestDispatcher dispatcher = getServletContext()
                 .getRequestDispatcher(MAIN_PAGE);
