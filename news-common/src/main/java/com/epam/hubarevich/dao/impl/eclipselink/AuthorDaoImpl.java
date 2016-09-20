@@ -130,7 +130,6 @@ public class AuthorDaoImpl implements AuthorDAO {
         Author author;
         try {
             author = entityManager.find(Author.class, id);
-            System.out.println(author);
             entityManager.remove(author);
         } catch (PersistenceException e) {
             throw new DAOException(e);

@@ -19,9 +19,17 @@ public class AuthorDaoImpl implements AuthorDAO {
     private final String A_ID = "authorId";
     private final String N_ID = "newsId";
     private final String UNCHECKED = "unchecked";
-    private final String HQL_FIND_AUTHOR_BY_NEWS_ID = "SELECT A FROM Author A join A.news NA WHERE NA.newsId= :newsId";
-    private final String HQL_FIND_AVAILABLE_AUTHOR = "SELECT A FROM Author A WHERE A.expired=null";
-    private final String HQL_FROM_AUTHOR = "FROM Author";
+    private final String HQL_FIND_AUTHOR_BY_NEWS_ID =
+            "SELECT A " +
+            "FROM Author A " +
+            "JOIN A.news NA " +
+            "WHERE NA.newsId= :newsId";
+    private final String HQL_FIND_AVAILABLE_AUTHOR =
+            "SELECT A " +
+            "FROM Author A " +
+            "WHERE A.expired=null";
+    private final String HQL_FROM_AUTHOR =
+            "FROM Author";
 
     public AuthorDaoImpl() {
     }

@@ -12,10 +12,7 @@ import com.epam.hubarevich.service.NewsService;
 import com.epam.hubarevich.service.exception.LogicException;
 import com.epam.hubarevich.utils.ConfigurationManager;
 import com.epam.hubarevich.utils.NewsCheckUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,14 +20,16 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Anton_Hubarevich on 6/23/2016.
- */
 
 @Service
 @Transactional
+
 public class NewsServiceImpl implements NewsService {
-    private static final Logger LOG = LogManager.getLogger(NewsServiceImpl.class);
+    private final String CFG = "cfg.news";
+    private final String CFG_START = "cfg.start_index";
+    private final String CFG_END = "cfg.end_index";
+    private final String MESSAGE_NO_NEWS = "No such news message in the Database";
+
 
     @Autowired
     private NewsDAO newsDAO;
@@ -45,6 +44,7 @@ public class NewsServiceImpl implements NewsService {
     private CommentDAO commentDAO;
 
     @Override
+
     public Long createNews(NewsDTO newsDTO) throws LogicException {
         Long successMarker = 0L;
         newsDTO.getNews().setNewsCreationDate(Calendar.getInstance().getTime());
@@ -66,7 +66,12 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Override
+
     public void deleteNews(Long newsId) throws LogicException {
+        if(newsId==null) {
+            throw new LogicException(MESSAGE_NO_NEWS);
+        }
+
         try {
             newsDAO.delete(newsId);
         } catch (DAOException e) {
@@ -75,6 +80,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+
     public Long updateNews(NewsDTO newsDTO) throws LogicException {
         Long successMarker = 0L;
         if (NewsCheckUtil.checkNewsDto(newsDTO)) {
@@ -95,7 +101,11 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Override
-    public void unwireNewsTags(long newsId) throws LogicException {
+
+    public void unwireNewsTags(Long newsId) throws LogicException {
+        if(newsId==null) {
+            throw new LogicException(MESSAGE_NO_NEWS);
+        }
         try {
             tagDao.unwireTagsNewsByNews(newsId);
         } catch (DAOException e) {
@@ -104,6 +114,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+
     public int getSearchNewsQuantity(SearchDTO searchDTO) throws LogicException {
         int quantity;
         try {
@@ -116,6 +127,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+
     public NewsDTO getNewsById(Long newsId) throws LogicException {
         NewsDTO newsDTO = new NewsDTO();
         try {
@@ -131,10 +143,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> getNewsBySearchCriteria(SearchDTO searchDTO, int page) throws LogicException {
-        System.out.println("NEWS BY SEARCH CRITERIA");
-        int startIndex = 1;
-        int endIndex = 5;
-        int news = Integer.valueOf(ConfigurationManager.getProperty("cfg.news"));
+        int startIndex = Integer.valueOf(ConfigurationManager.getProperty(CFG_START));
+        int endIndex = Integer.valueOf(ConfigurationManager.getProperty(CFG_END));
+        int news = Integer.valueOf(ConfigurationManager.getProperty(CFG));
         int total = getSearchNewsQuantity(searchDTO);
         List<NewsDTO> dtos;
         if (page != 1) {
@@ -155,7 +166,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public void getNextPrevIDs(SearchDTO searchDTO, Long newsId) throws LogicException {
-
+        if(newsId==null) {
+            throw new LogicException(MESSAGE_NO_NEWS);
+        }
         try {
             newsDAO.getPrevNextIds(searchDTO, newsId);
         } catch (DAOException e) {
@@ -166,6 +179,9 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public NewsDTO getNewsByTitle(News news) throws LogicException {
         NewsDTO newsDTO = new NewsDTO();
+        if(news.getTitle()==null){
+            throw new LogicException(MESSAGE_NO_NEWS);
+        }
         try {
             newsDTO.setNews(newsDAO.getNewsByNewsTitle(news));
             newsDTO.setAuthor(authorDAO.findAuthorByNewsId(newsDTO.getNews().getNewsId()));

@@ -154,7 +154,6 @@ public class NewsDaoImplTest {
         tags.add(tagDAO.findDomainById(ID_2));
         searchDTO.setTags(tags);
         searchDTO.setAuthor(AUTHOR);
-        System.out.println(newsDao.getPaginatedListBySearchCriteria(searchDTO, 1, 5));
         newsDao.getPrevNextIds(searchDTO, ID_1);
 
         assertTrue(ID_3.equals(searchDTO.getPrevId()));

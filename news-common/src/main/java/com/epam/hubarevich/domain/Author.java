@@ -1,10 +1,8 @@
 package com.epam.hubarevich.domain;
 
-import org.jboss.logging.annotations.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Set;
 

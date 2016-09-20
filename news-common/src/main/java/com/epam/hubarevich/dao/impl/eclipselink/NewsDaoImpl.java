@@ -164,7 +164,6 @@ public class NewsDaoImpl implements NewsDAO {
     @Override
     @SuppressWarnings(UNCHECKED)
     public List<News> getPaginatedListBySearchCriteria(SearchDTO searchDTO, int startIndex, int finishIndex) throws DAOException {
-        System.out.println("NEWS BY SEARCH CRITERIA ECLIPSE");
         List<News> news = new ArrayList<>();
         try {
             Query query = entityManager.createQuery(queryBuilderUtil.buildNewsSearchQuery(searchDTO));

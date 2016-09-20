@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Created by Anton_Hubarevich on 6/24/2016.
- */
+
 @Service
 @Transactional
 public class AuthorServiceImpl implements AuthorService {
+    private final String MESSAGE_NO_NEWS = "No such news message in the Database";
+    private final String MESSAG_NO_AUTHOR = "No such Author in the Database";
 
     @Autowired
     private AuthorDAO authorDAO;
@@ -41,6 +41,9 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public void deleteAuthor(Long authorId) throws LogicException {
 
+        if(authorId==null){
+            throw new LogicException(MESSAG_NO_AUTHOR);
+        }
         try {
             authorDAO.delete(authorId);
         } catch (DAOException e) {
@@ -62,6 +65,9 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Author getAuthorByNewsId(Long newsId) throws LogicException {
         Author author;
+        if(newsId==null) {
+            throw new LogicException(MESSAGE_NO_NEWS);
+        }
         try {
             author = authorDAO.findAuthorByNewsId(newsId);
         } catch (DAOException e) {
@@ -95,12 +101,13 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Deprecated
     public void unwireNewsAuthors(Long newsId) throws LogicException {
+        if(newsId==null){
+            throw new LogicException(MESSAGE_NO_NEWS);
+        }
         try {
             authorDAO.unwireNewsAuthors(newsId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
-
-
     }
 }

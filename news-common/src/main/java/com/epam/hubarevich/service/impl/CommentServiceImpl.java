@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Created by Anton_Hubarevich on 6/27/2016.
- */
+
 @Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
+
+    private final String MESSAGE_NO_COMMENT = "No such comment in the Database";
+    private final String MESSAGE_NO_NEWS = "No such news message in the Database";
 
     @Autowired
     CommentDAO commentDAO;
@@ -42,13 +43,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(Long commentId)  throws LogicException{
-        if (commentId>0) {
+        if (commentId==null) {
+            throw new LogicException(MESSAGE_NO_COMMENT);
+        }
             try {
                 commentDAO.delete(commentId);
             } catch (DAOException e) {
                 throw new LogicException(e);
             }
-        }
     }
 
     @Override
@@ -65,7 +67,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Deprecated
     public void deleteAllCommentsFromNews(Long newsId) throws LogicException {
-
+        if(newsId==null){
+            throw new LogicException(MESSAGE_NO_NEWS);
+        }
         try {
             commentDAO.deleteCommentsByNewsId(newsId);
         } catch (DAOException e) {

@@ -18,7 +18,7 @@ public interface NewsService {
 
     Long updateNews(NewsDTO newsDTO) throws LogicException;
 
-    void unwireNewsTags(long newsId) throws LogicException;
+    void unwireNewsTags(Long newsId) throws LogicException;
 
     int getSearchNewsQuantity(SearchDTO searchDTO) throws LogicException;
 
