@@ -32,7 +32,7 @@ public class NewsController {
     private final String SEARCH_CRITERIA = "searchCriteria";
     private final String ALL = "all";
     private final String ID = "id";
-    private final String PAGES = "pages";
+    private final String PAGES = "pagesQuantity";
     private final String LIST_NEWS = "listNews";
     private final String TAGS = "tags";
     private final String AUTHORS = "authors";
@@ -57,14 +57,16 @@ public class NewsController {
             page = Integer.valueOf(nextPage);
         }
 
+
         ModelAndView model = new ModelAndView(ALL);
 
         try {
             List<NewsDTO> newsDTOs = newsService.getNewsBySearchCriteria(searchDto,page);
             List<Tag> tags = tagService.getListOfTags();
             List<Author> authors = authorService.getListOfAuthors();
-            int [] pages = TotalNewsQuantityResolverUtil
+            int pages = TotalNewsQuantityResolverUtil
                     .getTotalPagesQuantity(newsService.getSearchNewsQuantity(searchDto));
+            model.addObject(NEXT_PAGE,page);
             model.addObject(PAGES,pages);
             model.addObject(LIST_NEWS,newsDTOs);
             model.addObject(AUTHORS,authors);

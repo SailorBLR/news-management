@@ -8,7 +8,7 @@ import com.epam.hubarevich.service.exception.LogicException;
 
 public class TotalNewsQuantityResolverUtil {
 
-    public static int[] getTotalPagesQuantity(int newsQuantity) throws LogicException {
+    public static int getTotalPagesQuantity(int newsQuantity) throws LogicException {
 
         int pagesQuantity = 0;
         if (newsQuantity % 5 > 0) {
@@ -17,11 +17,8 @@ public class TotalNewsQuantityResolverUtil {
 
             pagesQuantity = newsQuantity / 5;
         }
-        int[] array = new int[pagesQuantity];
-        for (int i = 1; i <= pagesQuantity; i++) {
-            array[i - 1] = i;
-        }
-        return array;
+
+        return pagesQuantity;
     }
 
 }
