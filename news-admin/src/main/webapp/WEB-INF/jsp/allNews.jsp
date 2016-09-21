@@ -4,6 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<script src="<c:url value="/resources/style/script/all-news-script.js" />"></script>
 <script src="<c:url value="/resources/style/source/jquery-3.1.0.js" />"></script>
 <script src="<c:url value="/resources/style/script/fSelect.js" />"></script>
 <link href="<c:url value="/resources/style/css/fSelect.css" />" rel="stylesheet">
@@ -18,6 +19,12 @@
         });
     })(jQuery);
 </script>
+
+<script>
+    var pages = ${nextPage};
+    var total = ${pagesQuantity};
+</script>
+
 <div class="search-container">
     <form action="<spring:url value="/search"/> " method="get">
         <input type="hidden" id="tagList" name="tagsSet">
@@ -62,11 +69,6 @@
 
     </div>
 </c:forEach>
-<div class="pagination">
-    <div class="pages">
+<div class="pagination" id="paging">
 
-        <c:forEach var="pageNumber" items="${pages}">
-            <span><a href="<c:url value="/search?nextPage=${pageNumber}"/>">${pageNumber}</a></span>
-        </c:forEach>
-    </div>
 </div>
