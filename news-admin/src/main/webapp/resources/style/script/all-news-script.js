@@ -1,8 +1,8 @@
 $(document).ready(function () {
-    var firstPage = "<a href='/client/controller?command=allNews&nextPage=1'>1</a>";
-    var lastPage = "<a href='/client/controller?command=allNews&nextPage=";
-    var prevPage = "<a href='/client/controller?command=allNews&nextPage=";
-    var curPage = "<a style='font-size: large' href='/client/controller?command=allNews&nextPage=";
+    var firstPage = "<a href='/search?nextPage=1'>1</a>";
+    var lastPage = "<a href='/search?nextPage=";
+    var prevPage = "<a href='/search?nextPage=";
+    var curPage = "<a style='font-size: large' href='/search?nextPage=";
     if (pages != 1) {
         $("#paging")
             .append(firstPage).append("...");
@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     for (i = pagesStart; i <= pagesEnd; i++) {
         var hre = "<a href='";
-        var val = "/client/controller?command=allNews&nextPage=";
+        var val = "/search?nextPage=";
         var endHre = "'>";
         var reference = hre.concat(val);
         reference = reference.concat(i).concat(endHre).concat(i);
@@ -41,8 +41,4 @@ $(document).ready(function () {
     }
 });
 
-function clearSearch() {
-    $("#clear").val(true);
-    $("#search-form").submit();
-}
 

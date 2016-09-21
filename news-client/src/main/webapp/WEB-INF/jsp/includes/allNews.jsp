@@ -13,7 +13,13 @@
             $('.authors').fSelect();
         });
     })(jQuery);
+
 </script>
+<script>
+    var pages = ${nextPage};
+    var total = ${pagesQuantity};
+</script>
+
 
 <div class="search-container">
     <form id="search-form" action="<c:url value="/controller"/>" method="get">
@@ -35,7 +41,6 @@
                 <option value="${authors.authorId}">${authors.authorName}</option>
             </c:forEach>
         </select>
-
         <div class="search-els"><input type="submit" value="Search"/></div>
         <div class="refresh-button"><input type="button" value="Refresh" onclick="clearSearch()"></div>
     </form>
@@ -61,13 +66,8 @@
             <div class="comments-quantity">Comments(${fn:length(list.comments)})</div>
             <div class="tagses">Tags: <c:forEach items="${list.tags}" var="tags">${tags.tagName} </c:forEach></div>
         </div>
-
     </div>
 </c:forEach>
-<div class="pagination">
-    <div class="pages">
-    <c:forEach var="pageNumber" items="${pages}">
-        <span><a href="<c:url value="/controller?command=allNews&nextPage=${pageNumber}"/>">${pageNumber}</a></span>
-    </c:forEach>
-    </div>
+<div class="pagination" id="paging">
+
 </div>

@@ -33,7 +33,7 @@ public class AllNews implements ActionCommand {
     TagService tagService;
 
     private final String PAGE = "includes/allNews.jsp";
-    private final String PAGES = "pages";
+    private final String PAGES_QUANTITY = "pagesQuantity";
     private final String AUTHORSNAME = "authorsname";
     private final String SEARCHDTO = "searchCriteria";
     private final String TAGS_S = "tagses";
@@ -84,9 +84,9 @@ public class AllNews implements ActionCommand {
             request.setAttribute(AUTHORS, authors);
             request.setAttribute(TAGS, tags);
             request.setAttribute(TITLE, ALL_NEWS);
-            request.setAttribute
-                    (PAGES, TotalNewsQuantityResolverUtil.getTotalPagesQuantity
-                            (newsService.getSearchNewsQuantity(searchDTO)));
+            request.setAttribute(NEXT_PAGE,page);
+            request.setAttribute(PAGES_QUANTITY,TotalNewsQuantityResolverUtil.getTotalPagesQuantity
+                    (newsService.getSearchNewsQuantity(searchDTO)));
 
         } catch (LogicException e) {
             throw new CommandException(e);
