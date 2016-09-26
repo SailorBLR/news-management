@@ -30,7 +30,7 @@
     <!-- Select users and user_roles from database -->
     <authentication-manager>
         <authentication-provider>
-            <!--<password-encoder hash="md5"/>-->
+            <password-encoder hash="md5"/>
             <jdbc-user-service data-source-ref="dataSource"
                                users-by-username-query=
                                        "select login,password,1 as ENABLED from users where login=?"
