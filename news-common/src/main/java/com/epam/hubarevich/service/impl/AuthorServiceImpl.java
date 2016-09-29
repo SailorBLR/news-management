@@ -14,7 +14,6 @@ import java.util.List;
 
 
 @Service
-@Transactional
 public class AuthorServiceImpl implements AuthorService {
     private final String MESSAGE_NO_NEWS = "No such news message in the Database";
     private final String MESSAG_NO_AUTHOR = "No such Author in the Database";
@@ -23,6 +22,7 @@ public class AuthorServiceImpl implements AuthorService {
     private AuthorDAO authorDAO;
 
     @Override
+    @Transactional
     public Long createAuthor(Author author) throws LogicException {
         Long authorId = 0L;
         try {
@@ -38,6 +38,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public void deleteAuthor(Long authorId) throws LogicException {
 
         if(authorId==null){
@@ -51,6 +52,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public void updateAuthor(Author author) throws LogicException {
         try {
             if (AuthorCheckUtil.checkAuthorData(author)) {
@@ -99,6 +101,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Deprecated
+    @Transactional
     public void unwireNewsAuthors(Long newsId) throws LogicException {
         if(newsId==null){
             throw new LogicException(MESSAGE_NO_NEWS);

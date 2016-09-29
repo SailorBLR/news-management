@@ -64,7 +64,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Deprecated
     public void deleteAllCommentsFromNews(Long newsId) throws LogicException {
         if(newsId==null){
             throw new LogicException(MESSAGE_NO_NEWS);

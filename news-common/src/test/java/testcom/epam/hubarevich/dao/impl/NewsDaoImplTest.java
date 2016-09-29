@@ -23,7 +23,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -155,8 +154,9 @@ public class NewsDaoImplTest {
         searchDTO.setTags(tags);
         searchDTO.setAuthor(AUTHOR);
         newsDao.getPrevNextIds(searchDTO, ID_1);
-        assertTrue(null == searchDTO.getPrevId());
-        assertTrue(ID_3.equals(searchDTO.getNextId()));
+
+        assertTrue(null == searchDTO.getNextId());
+        assertTrue(ID_3.equals(searchDTO.getPrevId()));
     }
 
     @Test

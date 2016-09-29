@@ -22,8 +22,6 @@ import java.util.List;
 
 
 @Service
-@Transactional
-
 public class NewsServiceImpl implements NewsService {
     private final String CFG = "cfg.news";
     private final String CFG_START = "cfg.start_index";
@@ -44,7 +42,7 @@ public class NewsServiceImpl implements NewsService {
     private CommentDAO commentDAO;
 
     @Override
-
+    @Transactional
     public Long createNews(NewsDTO newsDTO) throws LogicException {
         Long successMarker = 0L;
         newsDTO.getNews().setNewsCreationDate(Calendar.getInstance().getTime());
@@ -66,7 +64,7 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Override
-
+    @Transactional
     public void deleteNews(Long newsId) throws LogicException {
         if(newsId==null) {
             throw new LogicException(MESSAGE_NO_NEWS);
@@ -80,7 +78,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-
+    @Transactional
     public Long updateNews(NewsDTO newsDTO) throws LogicException {
         Long successMarker = 0L;
         if (NewsCheckUtil.checkNewsDto(newsDTO)) {
@@ -101,7 +99,7 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Override
-
+    @Transactional
     public void unwireNewsTags(Long newsId) throws LogicException {
         if(newsId==null) {
             throw new LogicException(MESSAGE_NO_NEWS);
@@ -209,6 +207,4 @@ public class NewsServiceImpl implements NewsService {
         }
         return newsDTOs;
     }
-
-
 }

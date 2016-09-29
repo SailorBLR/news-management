@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
  * Service class for news message deleting
  */
 @Component
-@Deprecated
 public class NewsDeleteService {
 
     @Autowired

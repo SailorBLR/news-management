@@ -18,7 +18,7 @@ public class QueryBuilderUtil {
             "ON C.news_id=N.news_id";
     private final String SQL_ORDER_BY =
             " GROUP BY N.news_id, N.title, N.short_text, N.full_text, N.creation_date, N.modification_date " +
-            "ORDER BY num_comments DESC, N.CREATION_DATE DESC";
+            "ORDER BY N.MODIFICATION_DATE DESC, num_comments DESC";
     private final String SQL_PAGINATION_START =
             "SELECT N.*" +
             "FROM (SELECT ROWNUM rw, N.* " +

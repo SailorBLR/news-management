@@ -17,7 +17,6 @@ import java.util.List;
  */
 
 @Service
-@Transactional
 public class TagServiceImpl implements TagService {
     private final String MESSAGE_WRONG_TAG_FORMAT = "Tag is not valid";
     private final String MESSAGE_NO_TAG = "No such tag in the Database";
@@ -38,6 +37,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional
     public void addNewTag(Tag tag) throws LogicException {
 
         if (!TagCheckUtil.checkTag(tag)){
@@ -52,6 +52,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional
     public void deleteTag(Long tagId) throws LogicException {
         if(tagId==null){
             throw new LogicException(MESSAGE_NO_TAG);
@@ -79,7 +80,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-
+    @Transactional
     public void updateTag(Tag tag) throws LogicException {
         if (!TagCheckUtil.checkTag(tag)){
             throw new LogicException(MESSAGE_WRONG_TAG_FORMAT);
